@@ -1,0 +1,14 @@
+<?php
+	if(isset($_POST['teacher_id']))
+	{
+		include'charting/teacher.php';
+	}
+	elseif(isset($_POST['student_id']))
+	{
+		include'charting/student.php';
+	}
+	elseif(isset($_POST['subject_id']))
+	{
+		include'charting/class.php';
+	}
+?>

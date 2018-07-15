@@ -45,6 +45,7 @@ if($_GET['action']=='edit_test' && $_GET['test_id']!='')
 //Add test
 if(isset($_POST['AddTest']) && $_POST['test_id']=='')
 {
+
 	mysql_query("INSERT INTO es_mcq_test(`class_id`,`subject_id`, `test_name`, `no_of_question`, `negative_marking`,`weightage`,`from_date`, `to_date`, `duration`, `start_time`, `end_time`, `status`, `created_at`, `updated_at`) VALUES ('".$_POST['classid']."','".$_POST['subjectid']."','".$_POST['test_name']."','".$_POST['no_of_question']."','".$_POST['negative_marking']."','".$_POST['weightage']."','".$_POST['from_date']."','".$_POST['to_date']."','".$_POST['duration']."','".$_POST['start_time']."','".$_POST['end_time']."','1','".date("Y-m-d h:i:s")."','".date("Y-m-d h:i:s")."')");
 
 	header("Location:?pid=143&action=testlist");
@@ -87,19 +88,31 @@ if($_GET['action']=='change_status' && $_GET['test_id']!='')
 //Add question 
 if($_GET['action']=='add-question' &&  $_POST['question_id']=='')
 {
+	
 	$question = mysql_fetch_assoc(mysql_query("SELECT count(question_id) AS fill_question from es_mcq_questions where testid='".$_POST['test']."'"));
 	$test = mysql_fetch_assoc(mysql_query("SELECT `test_id`, `no_of_question` FROM `es_mcq_test` WHERE `test_id`='".$_POST['test']."'"));                                            
 	
-	
 	if($question['fill_question']>=$test['no_of_question'])
 	{
-		header("Location:?pid=143&action=question&test=".$_POST['test']."&opr=exceed");
+		//header("Location:?pid=143&action=question&test=".$_POST['test']."&opr=exceed");
+		echo 'limit_exceed';
+		exit;
 	}
 	else
 	{
-		mysql_query("INSERT INTO `es_mcq_questions`(`testid`, `question`, `option1`, `option2`, `option3`, `option4`, `answer`,`que_status`) VALUES ('".$_POST['test']."','".$_POST['question']."','".$_POST['option1']."','".$_POST['option2']."','".$_POST['option3']."','".$_POST['option4']."','".$_POST['answer']."','1')");
-
-		header("Location:?pid=143&action=question&test=".$_POST['test']);
+		$file_name = rand(1,999999).'_'.$_FILES['question_image']['name'];
+		$file_tmp =$_FILES['question_image']['tmp_name'];
+		if(move_uploaded_file($file_tmp,"images/question_image/".$file_name))
+		{
+			mysql_query("INSERT INTO `es_mcq_questions`(`testid`, `question`,`question_image`, `option1`, `option2`, `option3`, `option4`, `answer`,`que_status`) VALUES ('".$_POST['test']."','".$_POST['question']."','".$file_name."','".$_POST['option1']."','".$_POST['option2']."','".$_POST['option3']."','".$_POST['option4']."','".$_POST['answer']."','1')");
+			echo 'success';
+			exit;	
+		}
+		else
+		{
+			echo 'fail_upload';
+			exit;	
+		}
 	}
 }
 
@@ -124,7 +137,7 @@ if($_GET['action']=='change_status' && $_GET['question_id']!='')
 //Get question details question
 if($_GET['action']=='edit_question' && $_GET['question_id']!='')
 {
-	 $question = mysql_query("SELECT  `question_id`,`testid`,`question`,`option1`,`option2`,`option3`,`option4`,`answer`,`que_status` FROM `es_mcq_questions` WHERE `question_id`='".$_GET['question_id']."'");
+	 $question = mysql_query("SELECT  `question_id`,`question_image`,`testid`,`question`,`option1`,`option2`,`option3`,`option4`,`answer`,`que_status` FROM `es_mcq_questions` WHERE `question_id`='".$_GET['question_id']."'");
 
 	 echo json_encode(mysql_fetch_assoc($question));
 	 exit;
@@ -134,9 +147,37 @@ if($_GET['action']=='edit_question' && $_GET['question_id']!='')
 if($_GET['action']=='add-question' &&  $_POST['question_id']!='')
 {
 
-	mysql_query("UPDATE `es_mcq_questions` SET `testid`='".$_POST['test']."',`question`='".$_POST['question']."',`option1`='".$_POST['option1']."',`option2`='".$_POST['option2']."',`option3`='".$_POST['option3']."',`option4`='".$_POST['option4']."',`answer`='".$_POST['answer']."' WHERE `question_id`='".$_POST['question_id']."'");
-	
-	header("Location:?pid=143&action=question&test=".$_POST['test']);
+	//Update with file upload
+	if($_FILES['question_image']['name'] !='')
+	{
+		$old_image = mysql_fetch_assoc(mysql_query("SELECT `question_image`,`question_id` FROM es_mcq_questions where `question_id`='".$_POST['question_id']."'"));
+
+		$file_name = rand(1,999999).'_'.$_FILES['question_image']['name'];
+		$file_tmp = $_FILES['question_image']['tmp_name'];
+		
+		unlink("images/question_image/".$old_image['question_image']);
+
+		if(move_uploaded_file($file_tmp,"images/question_image/".$file_name))
+		{
+			mysql_query("UPDATE `es_mcq_questions` SET `testid`='".$_POST['test']."',`question`='".$_POST['question']."',`question_image`='".$file_name."',`option1`='".$_POST['option1']."',`option2`='".$_POST['option2']."',`option3`='".$_POST['option3']."',`option4`='".$_POST['option4']."',`answer`='".$_POST['answer']."' WHERE `question_id`='".$_POST['question_id']."'");
+			
+			echo 'success';
+			exit;	
+		}
+		else
+		{
+			echo 'fail_upload';
+			exit;	
+		}
+	}
+	else
+	{
+		//Update without file upload
+		mysql_query("UPDATE `es_mcq_questions` SET `testid`='".$_POST['test']."',`question`='".$_POST['question']."',`option1`='".$_POST['option1']."',`option2`='".$_POST['option2']."',`option3`='".$_POST['option3']."',`option4`='".$_POST['option4']."',`answer`='".$_POST['answer']."' WHERE `question_id`='".$_POST['question_id']."'");
+
+			echo 'success';
+			exit;	
+	}
 }
 
 //Delete question

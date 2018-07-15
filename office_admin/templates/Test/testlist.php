@@ -17,12 +17,16 @@
         <link href="<?php echo base_url('assets/plugins/bootstrap.datepicker/css/bootstrap-datetimepicker.css');  ?>" type="text/css" rel="stylesheet"/>
 
         <link rel="stylesheet" href="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.css'); ?>">
-    
+
+        <link rel="stylesheet" href="<?php echo base_url('assets/plugins/select2/css/select2.min.css'); ?>">
+        <link rel="stylesheet" href="<?php echo base_url('assets/plugins/select2/css/select2.css'); ?>">
+        
         <!-- THEME CSS -->
         <link href="<?php echo base_url('assets/css/essentials.css'); ?>" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url('assets/css/layout.css'); ?>" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url('assets/css/color_scheme/green.css'); ?>" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/third_party/DataTables/datatables.min.css'); ?>">
+
     </head>
     <body>
         <?php
@@ -163,7 +167,7 @@
 
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
                                 <label><b>Suject</b><span  class="error-lbl">*</span></label>
-                                <select name="subjectid" id="subject-id" class="form-control" >
+                                <select name="subjectid[]" id="subject-id" class="form-control select2-multiple select2-hidden-accessible" multiple aria-hidden="true">
                                     <option value=''>Please Select Subject</option>
                                 </select>
                                 <span id="subject-error"></span>
@@ -237,9 +241,14 @@
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/moment.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/bootstrap.datepicker/js/bootstrap-datepicker.min.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/bootstrap.datepicker/js/bootstrap-timepicker.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo base_url('assets/plugins/select2/js/select2.full.js'); ?>"></script>
         <script type="text/javascript"> 
-        $('.data-table').DataTable();
+            $('.data-table').DataTable();
             
+            $('#subject-id').select2({
+                theme: "bootstrap"
+            });
+
             //Find no of subject using ajax
             $(document).ready(function(){
                 

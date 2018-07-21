@@ -7,7 +7,7 @@
   // LOCAL CONFIGURATION
   define('DB_SERVER', 'localhost');
   define('DB_SERVER_USERNAME', 'root');
-  define('DB_SERVER_PASSWORD', '');
+  define('DB_SERVER_PASSWORD', '123456');
   define('DB_DATABASE', 'zest_career');
 
 

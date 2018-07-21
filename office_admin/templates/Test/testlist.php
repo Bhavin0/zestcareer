@@ -85,14 +85,26 @@
                                     </thead>
                                     <tbody>
                                 <?php 
-                                    $test = mysql_query("SELECT  `test_id`, `subject_id`, `test_name`, `no_of_question`,`weightage`,`negative_marking`,`from_date`, `to_date`, `duration`, `start_time`, `end_time`, `created_by`, `updated_by`, `status`, `created_at`, `updated_at`, `deleted_at`,`es_classesid`,`es_classname`,`es_subjectid`,`es_subjectname` FROM `es_mcq_test` INNER JOIN `es_classes` as e ON  `es_classesid`=`class_id` INNER JOIN `es_subject` as es ON  `es_subjectid`=`subject_id` WHERE deleted_at IS NULL ORDER BY updated_at DESC");
+                                    $test = mysql_query("SELECT  `test_id`, `subject_id`, `test_name`, `no_of_question`,`weightage`,`negative_marking`,`from_date`, `to_date`, `duration`, `start_time`, `end_time`, `created_by`, `updated_by`, `status`, `created_at`, `updated_at`, `deleted_at`,`es_classesid`,`es_classname` FROM `es_mcq_test` INNER JOIN `es_classes` as e ON  `es_classesid`=`class_id` WHERE deleted_at IS NULL ORDER BY updated_at DESC");
 
                                     while($row = mysql_fetch_assoc($test))
                                     { ?>
                                     <tr>
                                         <td><a href="?pid=143&action=question&test=<?php echo $row['test_id'];?>" target="_blank" data-toggle="tooltip" data-original-title="Question List"><?php echo $row['test_name'];?></a></td>
                                         <td><?php echo $row['es_classname'];?></td>
-                                        <td><?php echo $row['es_subjectname'];?></td>
+                                        <td>
+                                        <?php
+                                            $subject=[];
+                                            
+                                            $subjectSql = mysql_query("SELECT `es_subjectid`,`es_subjectname` FROM `es_subject` WHERE  `es_subjectid` IN (".$row['subject_id'].")");
+
+                                            while($subjectRow = mysql_fetch_assoc($subjectSql))
+                                            {   
+                                                $subject[]=$subjectRow['es_subjectname'];
+                                            }
+                                            echo implode(',', $subject);
+                                            unset($subject);
+                                        ?></td>
                                         <td><?php echo $row['no_of_question'];?></td>
                                         <td>
                                             <?php 
@@ -119,9 +131,9 @@
 
                                         </td>
                                         <td>
-                                            <a href="javascritpt:void(0)" id="<?php echo $row['test_id']; ?>" class="btn btn-warning btn-xs" data-toggle="tooltip" data-original-title="Edit Test" > &nbsp;<i class="fa fa-edit" ></i> </a>
+                                            <a style="margin:0px" id="<?php echo $row['test_id']; ?>" class="btn btn-warning btn-xs" data-toggle="tooltip" data-original-title="Edit Test" > &nbsp;<i class="fa fa-edit"></i> </a>
 
-                                            <a href="?pid=143&action=delete_test&test_id=<?php echo $row['test_id']; ?>" class="btn btn-danger btn-xs" data-toggle="tooltip" data-original-title="Delete Test" onclick="return confirm('Are you sure ?');"> &nbsp;<i class="fa fa-trash-o"></i> </a>
+                                            <a style="margin:0px" href="?pid=143&action=delete_test&test_id=<?php echo $row['test_id']; ?>" class="btn btn-danger btn-xs" data-toggle="tooltip" data-original-title="Delete Test" onclick="return confirm('Are you sure ?');"> &nbsp;<i class="fa fa-trash-o"></i> </a>
                                         </td>
                                     </tr>
                                     <?php } ?>
@@ -148,7 +160,7 @@
                         <div class="modal-body"> 
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <span class="pull-right">
-                                    <font color="#FF0000" face="Verdana, Arial, Helvetica, sans-serif" size="2">Note :  * denotes mandatory&nbsp;</font>
+                                    <font color="#FF0000" face="Verdana, Arial, Helvetica, sans-serif" size="2">Note : * denotes mandatory&nbsp;</font>
                                 </span>
                             </div>
 
@@ -166,8 +178,8 @@
                             </div>
 
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
-                                <label><b>Suject</b><span  class="error-lbl">*</span></label>
-                                <select name="subjectid[]" id="subject-id" class="form-control select2-multiple select2-hidden-accessible" multiple aria-hidden="true">
+                                <label><b>Subject</b><span  class="error-lbl">*</span></label>
+                                <select name="subjectid[]" id="subjectid" class="form-control" multiple>
                                     <option value=''>Please Select Subject</option>
                                 </select>
                                 <span id="subject-error"></span>
@@ -239,15 +251,17 @@
         <script type="text/javascript" src="<?php echo base_url('assets/third_party/DataTables/datatables.min.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/jquery/jquery.validate.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/moment.js'); ?>"></script>
+       
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/bootstrap.datepicker/js/bootstrap-datepicker.min.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/bootstrap.datepicker/js/bootstrap-timepicker.js'); ?>"></script>
         <script type="text/javascript" src="<?php echo base_url('assets/plugins/select2/js/select2.full.js'); ?>"></script>
         <script type="text/javascript"> 
             $('.data-table').DataTable();
             
-            $('#subject-id').select2({
-                theme: "bootstrap"
-            });
+           /* $('#subjectid').select2({
+                theme: "bootstrap",
+                dropdownParent: $('#add-test')
+            });*/
 
             //Find no of subject using ajax
             $(document).ready(function(){
@@ -289,16 +303,17 @@
                             url: "?pid=143&action=testlist&classid="+$(this).val(),
                             dataType: "json",
                             type : "GET",
+                            async: true,
                             success : function(data) {
-                                $('#subject-id').html('');
-                                $('#subject-id').append('<options value="">Please Select Subject</option>');
+                                $('#subjectid').html('');
+                                $('#subjectid').append('<options value="">Please Select Subject</option>');
                                 var option='',i=0;
                                 if(data.length>0)    
                                 {
                                     $('#subject-error').hide();
                                     for(i=0;i<data.length;i++)
                                     {
-                                        $('#subject-id').append('<option value="'+data[i].es_subjectid+'">'+data[i].es_subjectname+'</option>');
+                                        $('#subjectid').append('<option value="'+data[i].es_subjectid+'">'+data[i].es_subjectname+'</option>');
                                     }
                                 }
                                 else
@@ -324,9 +339,7 @@
                                 
                             }
                     });
-                    
-                    
-                    
+
                     if($(this).val()=='0')
                     {                   
                         $(this).prop('checked',true);  
@@ -367,7 +380,7 @@
                             required:"Please Select Class"
                         },
                         subjectid:{
-                            required:"Please Select Class"
+                            required:"Please Select Subjects"
                         },
                         test_name:{
                             required:"Please Enter Test Name"
@@ -379,7 +392,7 @@
                             required:"Please Enter No Of Question",
                             number:"Please Enter Number Only"
                         },
-                        Weightage:{
+                        weightage:{
                             required:"Please Enter Weightage",
                             number:"Please Enter Number Only"
                         },
@@ -405,50 +418,40 @@
                     }
                 });
 
-                 $('.btn-warning').on('click',function(){
-                    
+                $('.btn-warning').on('click',function(){
                     $.ajax({
-                            url: "?pid=143&action=edit_test&test_id="+$(this).attr('id'),
-                            dataType: "json",
-                            type : "GET",
-                            success : function(data) 
+                        url: "?pid=143&action=edit_test&test_id="+$(this).attr('id'),
+                        dataType: "json",
+                        type : "GET",
+                        success : function(data) 
+                        {
+                            $('#subjectid').html('');
+                            var option='',i=0;
+                            if(data.subjectid.length!=0)
                             {
-                                $('#subject-id').html('');
-                                var option='',i=0;
-                                if(data.length!=0)
+                                var subjectid = data.subjectid;
+                                for(i=0;i<data.subjectid.length;i++)
                                 {
-                                    
-                                    $('#subject-id').html('<options value="">Please Select Subject</option>');
-                                    for(i=0;i<data.subjectid.length;i++)
-                                    {
-                                        if(data.es_subjectid==data.subjectid[i].es_subjectid)
-                                        {
-                                            $('#subject-id').append('<option value="'+data.subjectid[i].es_subjectid+'" selected="true">'+data.subjectid[i].es_subjectname+'</option>');    
-                                        }
-                                        else
-                                        {
-                                            $('#subject-id').append('<option value="'+data.subjectid[i].es_subjectid+'">'+data.subjectid[i].es_subjectname+'</option>');
-                                        }
-                                    }
-                                    $('#test_name').val(data.test_name);
-                                    $('#classid').val(data.es_classesid);
-                                    $('#subject-id').val(data.es_subjectid);
-                                    $('#no_of_question').val(data.no_of_question);
-                                    $('#negative_marking').val(data.negative_marking);
-                                    $('#weightage').val(data.weightage);
-                                    $('#duration').val(data.duration);
-                                    $('#from_date').val(data.from_date);
-                                    $('#to_date').val(data.to_date);
-                                    $('#start_time').val(data.start_time); 
-                                    $('#end_time').val(data.end_time);
-                                    $('#test_id').val(data.test_id);
-                                    $('#add-test').modal('show');
-
+                                    $('#subjectid').append('<option value="'+data.subjectid[i].es_subjectid+'">'+data.subjectid[i].es_subjectname+'</option>');   
                                 }
-                            },
-                            error: function(jqXHR, textStatus, errorThrown ) {
-                                console.log(errorThrown);
+                                $('#test_name').val(data.test.test_name);
+                                $('#classid').val(data.test.es_classesid);
+                                $('#subjectid').val(data.test.es_subjectid);
+                                $('#no_of_question').val(data.test.no_of_question);
+                                $('#negative_marking').val(data.test.negative_marking);
+                                $('#weightage').val(data.test.weightage);
+                                $('#duration').val(data.test.duration);
+                                $('#from_date').val(data.test.from_date);
+                                $('#to_date').val(data.test.to_date);
+                                $('#start_time').val(data.test.start_time); 
+                                $('#end_time').val(data.test.end_time);
+                                $('#test_id').val(data.test.test_id);
+                                $('#add-test').modal('show');
                             }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown ) {
+                            console.log(errorThrown);
+                        }
                     });
                 });
             });

@@ -37,9 +37,10 @@
 
             //Find test from based on class
             /*echo "SELECT  `test_id`, `subject_id`, `test_name`, `no_of_question`, `from_date`, `to_date`, `duration`, `start_time`, `end_time`, `created_by`, `updated_by`, `status`, `created_at`, `updated_at`, `deleted_at`,`es_classesid`,`es_classname`,`es_subjectid`,`es_subjectname` FROM `es_mcq_test` INNER JOIN `es_classes` as e ON  `es_classesid`=`class_id` INNER JOIN `es_subject` as es ON  `es_subjectid`=`subject_id` WHERE deleted_at IS NULL AND `es_classesid`='".$class['pre_class']."' AND  `from_date`>='".date('Y-m-d')."' AND  '".date('Y-m-d')."' <=`to_date`  AND  `start_time`>='".date('H:i')."' AND '".date('H:i')."' <=`end_time` and status='1' ORDER BY updated_at DESC";die;*/
-
+            
             $test = [];
-            $testSource = mysql_query("SELECT  `test_id`, `subject_id`, `test_name`, `no_of_question`, `from_date`, `to_date`, `duration`, `start_time`, `end_time`, `created_by`, `updated_by`, `status`, `created_at`, `updated_at`, `deleted_at`,`es_classesid`,`es_classname`,`es_subjectid`,`es_subjectname` FROM `es_mcq_test` INNER JOIN `es_classes` as e ON  `es_classesid`=`class_id` INNER JOIN `es_subject` as es ON  `es_subjectid`=`subject_id` WHERE deleted_at IS NULL AND `es_classesid`='".$class['pre_class']."' AND  `from_date`>='".date('Y-m-d')."' AND  '".date('Y-m-d')."' <=`to_date`  AND  status='1' ORDER BY updated_at DESC");
+
+            $testSource = mysql_query("SELECT `test_id`, `subject_id`, `test_name`, `no_of_question`, `from_date`, `to_date`, `duration`, `start_time`, `end_time`, `created_by`, `updated_by`, `status`, `created_at`, `updated_at`, `deleted_at`,`es_classesid`,`es_classname`,`es_subjectid`,`es_subjectname` FROM `es_mcq_test` INNER JOIN `es_classes` as e ON  `es_classesid`=`class_id` INNER JOIN `es_subject` as es ON  `es_subjectid`=`subject_id` WHERE deleted_at IS NULL AND `es_classesid`='".$class['pre_class']."' AND  `from_date`>='".date('Y-m-d')."' AND  '".date('Y-m-d')."' <=`to_date`  AND  status='1' ORDER BY updated_at DESC");
             
             if(mysql_num_rows($testSource))
             {
@@ -85,7 +86,7 @@
                                                 </div>
                                                 <div class="box-body text-center">
                                                     No Of Question : <?php echo $tvalue['no_of_question']; ?><br/> 
-                                                    Duration: <span id="duration_<?php echo $tvalue['test_id']; ?>"><?php echo $tvalue['duration']; ?></span>
+                                                    Duration : <span id="duration_<?php echo $tvalue['test_id']; ?>"><?php echo $tvalue['duration']; ?></span>
                                                     <br/>
                                                     <button type="button"  class="btn btn-warning fill-test" id="<?php echo $tvalue['test_id']; ?>">Start Test</button>
 
@@ -112,15 +113,14 @@
                             <div class="row">
                                 <div class="col-md-8 col-sm-8 col-xs-8">
                                     <form action="?pid=62&action=test" method="post" id="ans-form" style="display: none">
-                                        <div class="col-md-6 col-sm-12 col-xs-12">  
-                                            
+                                        <div class="col-md-6 col-sm-12 col-xs-12" style="    margin-bottom: 10px;">  
                                             <input type="hidden" name="no_of_question"  
                                             id="no_of_question" />
                                             <input type="hidden" name="question_id" id="question_id" />
                                             <input type="hidden" name="curr-que" id="curr-que"  />
-                                                <span id="question">
-                                                
-                                                </span>
+                                            <span id="question">
+                                            
+                                            </span>
                                         </div>
                                         
                                         <div class="col-md-12 col-sm-12 col-xs-12 form-choice">  
@@ -169,7 +169,12 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-4" id="que-list">
+                                
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-4" id="que-img" style="display: none">
+                                    <img  alt="Question Image" id="question-image" class="img img-responsive" style="height:230px;width:350px;" />
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-choice" id="que-list" style="margin-top:25px;">
                                     
                                 </div>
                             </div>
@@ -233,6 +238,7 @@
                 var duration = $('#duration_'+id).text();
                 
                 $('#test_'+$(this).attr('id')).remove();
+                    
                     $.ajax({
                         url:"?pid=62&action=question&test="+$('#test_unique_'+id).val(),
                         dataType:"json",
@@ -266,9 +272,15 @@
                                         size:"lg"
                                     });
                                 }
+
                                 $('#ans-form').show();
                                 $('#question_id').val(response[0].question_id);
-                                $('#question').text('1. '+response[0].question);
+
+                                //$($('<div />').html(response[0].question)).find('p');
+                                $('#question').html('1 : '+$($($('<div />').html(response[0].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text());
+
+                                //+(i+1)+':
+                                
                                 $('#curr-que').val('1');
                             
                                 $('#ans-op1').text('a. '+response[0].option1);
@@ -281,15 +293,25 @@
                                 $('#next').val(response[0].testid);
                                 $('#save_next').val(response[0].testid);
                                 $('#no_of_question').val(data.length);
+                                
+                                if(response[0].question_image!=null) 
+                                {
+                                    $('#que-img').show();
+                                    $('#question-image').attr("src",response[0].question_image);
+                                }
+                                else
+                                {
+                                    $('#que-img').hide();   
+                                }
                                 for(i=0;i<data.length;i++) 
                                 {
                                     if((i+1)==1)
                                     {
-                                        question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">'+(i+1)+' : <a class="text-success load-que" id="que_'+(i+1)+'" data-params="'+data[i].question_id+'">'+data[i].question+'</a></div>';   
+                                        question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">'+(i+1)+' : <a class="text-success load-que" id="que_'+(i+1)+'" data-params="'+data[i].question_id+'">'+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';   
                                     }
                                     else
                                     {
-                                        question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">'+(i+1)+' : <a id="que_'+(i+1)+'" class="load-que" data-params="'+data[i].question_id+'" >'+data[i].question+'</a></div>';
+                                        question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 "><a id="que_'+(i+1)+'" class="load-que" data-params="'+data[i].question_id+'" >'+(i+1)+' : '+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';
                                     }
                                 }
                                 
@@ -342,6 +364,16 @@
                                     //$("#que_"+response.next_question).removeAttr("href");
 
                                     $("#que_"+(response.next_question)).addClass('text-success');
+
+                                    if(response.question_image!=null) 
+                                    {
+                                        $('#que-img').show();
+                                        $('#question-image').attr("src",response.question_image);
+                                    }
+                                    else
+                                    {
+                                        $('#que-img').hide();   
+                                    }
                                     
                                     $('#ans-op1').text('a. '+response.data.option1);
                                     $('#ans-op2').text('b. '+response.data.option2);
@@ -408,6 +440,16 @@
                                     }
                                 }                                 
                             }
+
+                            if(response.data.question_image!=null) 
+                            {
+                                $('#que-img').show();
+                                $('#question-image').attr("src",response.data.question_image);
+                            }
+                            else
+                            {
+                                $('#que-img').hide();   
+                            }
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown ) 
@@ -462,6 +504,16 @@
                                         $('#option'+i).prop('checked',true);
                                     }
                                 }                                 
+                            }
+
+                            if(response.data.question_image!=null) 
+                            {
+                                $('#que-img').show();
+                                $('#question-image').attr("src",response.data.question_image);
+                            }
+                            else
+                            {
+                                $('#que-img').hide();   
                             }
                         }
                     },

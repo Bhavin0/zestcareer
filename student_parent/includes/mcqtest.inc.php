@@ -43,8 +43,9 @@
 		{
 			$offset = $_GET['offset'];
 		}
-		//echo "SELECT `question_id`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions`  WHERE `que_status`='1' AND testid='".$_GET['test']."' LIMIT ".$offset.",1";die;
-		$questionSource = mysql_query("SELECT `question_id`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions`  WHERE `que_status`='1' AND testid='".$_GET['test']."' LIMIT ".$offset.",1");
+		
+
+		$questionSource = mysql_query("SELECT `question_id`,`question_image`,`testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions`  WHERE `que_status`='1' AND testid='".$_GET['test']."' LIMIT ".$offset.",1");
 
 		//Find question from based on test
 		$answer = [];
@@ -57,6 +58,13 @@
 		if(mysql_num_rows($questionSource))
 		{
 	        $question['data'] = mysql_fetch_assoc($questionSource);
+	        
+	        if($question['data']['question_image']!='')
+			{
+				$question['data']['question_image'] = 'http://'.$_SERVER['HTTP_HOST'].'/office_admin/images/question_image/'.$question['data']['question_image'];
+			}
+	        $question['data']['question'] = preg_replace("~[^a-z0-9:]~i"," ", str_replace(PHP_EOL,'',strip_tags($question['data']['question']))); 
+
 	        
 			$answer = mysql_fetch_assoc(mysql_query("SELECT `test_id`, `student_id`, `que_id`, `answer` FROM `es_mcq_result` WHERE `que_id`='".$_GET['question_id']."' and `test_id`='".$_GET['test']."' and `student_id`='".$_SESSION['eschools']['user_id']."'"));
 			
@@ -85,24 +93,31 @@
 
         $question['data']['answer'] = $answer;
         $question['next_question'] = $offset;
+        
 		echo json_encode($question);
 		exit;
 	}
 
-	if($_GET['action']=='question')
+	if($_GET['action']=='question' &&  isset($_GET['test']))
 	{	
 		$question = [];
-		$questionSource = mysql_query("SELECT `question_id`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions` WHERE `que_status`='1' AND testid='".$_GET['test']."'");
+		
+		$questionSource = mysql_query("SELECT `question_id`,`question_image`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions` WHERE `que_status`='1' AND testid='".$_GET['test']."'");
 		
 		//Find question from based on test
 		if(mysql_num_rows($questionSource))
 		{
 			while ($row = mysql_fetch_assoc($questionSource)) 
 			{
+				if($row['question_image']!='')
+				{
+					$row['question_image']= 'http://'.$_SERVER['HTTP_HOST'].'/office_admin/images/question_image/'.$row['question_image'];
+				}
+				$row['question'] = htmlspecialchars($row['question']);  
 	        	$question[] = $row;
 			}
 		}
-         
+        //echo "<pre>" ;print_r(json_encode($question));die;
 		echo json_encode($question);
 		exit;
 	}

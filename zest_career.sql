@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.8.2
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 14, 2018 at 05:42 AM
--- Server version: 10.1.13-MariaDB
--- PHP Version: 5.6.21
+-- Host: localhost
+-- Generation Time: Jul 22, 2018 at 11:12 AM
+-- Server version: 5.5.60
+-- PHP Version: 5.6.36
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -422,13 +424,13 @@ CREATE TABLE `es_assignment` (
 --
 
 INSERT INTO `es_assignment` (`es_assignmentid`, `as_academic_id`, `as_class_id`, `as_division_id`, `as_subject_id`, `as_name`, `as_description`, `as_attachment`, `as_createdon`, `as_lastdate`, `person_type`, `created_by`, `status`) VALUES
-(1, 1, '2', 2, '1', 'MATHS SUM', '<p>DO THE FOLLOWIG SUM </p><p><span style="font-weight: bold;">q.1 876328042398</span></p><p><span style="font-weight: bold;">q.2 3287409283498-2</span></p><p><span style="font-weight: bold;">q.3 432894-2394230<br></span><br></p>', 'sql', '2018-03-16', '2018-03-16', 'admin', 1, 'active'),
+(1, 1, '2', 2, '1', 'MATHS SUM', '<p>DO THE FOLLOWIG SUM </p><p><span style=\"font-weight: bold;\">q.1 876328042398</span></p><p><span style=\"font-weight: bold;\">q.2 3287409283498-2</span></p><p><span style=\"font-weight: bold;\">q.3 432894-2394230<br></span><br></p>', 'sql', '2018-03-16', '2018-03-16', 'admin', 1, 'active'),
 (2, 1, '5', 5, '19', 'DRAW INIDAN FLAG DRAWING', 'draw an indian flag painting, and fill color in it.<br>', 'sql', '2018-03-16', '2018-03-16', 'teacher', 3, 'deleted'),
-(3, 1, '2', 2, '1', 'test 1', '<span style="font-weight: bold;">67556<span style="font-style: italic;">8797</span></span>', '', '2018-03-17', '2018-03-17', 'admin', 1, 'active'),
+(3, 1, '2', 2, '1', 'test 1', '<span style=\"font-weight: bold;\">67556<span style=\"font-style: italic;\">8797</span></span>', '', '2018-03-17', '2018-03-17', 'admin', 1, 'active'),
 (4, 1, '4', 4, '13', '*', '', 'jpg', '2018-03-17', '2018-03-17', 'admin', 1, 'active'),
 (5, 1, '4', 4, '11', 'English', 'Yfucufuf', '', '2018-03-21', '2018-03-21', 'teacher', 3, 'deleted'),
 (6, 1, '4', 4, '15', 'Paper craft', '', '', '2018-06-02', '2018-06-10', 'teacher', 3, 'deleted'),
-(7, 3, '3', 3, '6', 'Alphabets', 'Write "A" in N.B', 'docx', '2018-06-04', '2018-06-04', 'teacher', 3, 'active'),
+(7, 3, '3', 3, '6', 'Alphabets', 'Write \"A\" in N.B', 'docx', '2018-06-04', '2018-06-04', 'teacher', 3, 'active'),
 (8, 1, '3', 3, '7', 'Spellings', 'Pg 10. Fill in the missing numbers. in T.B.', '', '2018-06-04', '2018-06-04', 'teacher', 3, 'deleted');
 
 -- --------------------------------------------------------
@@ -2113,6 +2115,8 @@ CREATE TABLE `es_marks` (
 CREATE TABLE `es_mcq_questions` (
   `question_id` int(11) NOT NULL,
   `testid` int(11) DEFAULT NULL COMMENT 'Reference of es_test table',
+  `subject_id` int(11) DEFAULT NULL COMMENT 'Reference from test table selected subjects',
+  `question_image` varchar(255) DEFAULT NULL,
   `question` text,
   `option1` varchar(30) DEFAULT NULL,
   `option2` varchar(30) DEFAULT NULL,
@@ -2126,13 +2130,12 @@ CREATE TABLE `es_mcq_questions` (
 -- Dumping data for table `es_mcq_questions`
 --
 
-INSERT INTO `es_mcq_questions` (`question_id`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `answer`, `que_status`) VALUES
-(1, 3, 'this is test questions', 'op1', 'op2', 'op3', 'op4', 3, 1),
-(7, 3, 'This is yearly test question', 'option1', 'option2', 'option3', 'option4', 1, 1),
-(8, 1, 'This is yearly test question 2018', 'aadfsfds', 'b', 'c', 'd', 1, 1),
-(9, 3, 'Who is prime minister of India ? ', 'modi', 'nehru', 'vajpeyi', 'kalam', 1, 1),
-(10, 3, 'Who is lady in a history has 5 husbands ?', 'Yashoda', 'Rukmani', 'Draupadi', 'Kunti', 3, 1),
-(13, 4, 'Who is father of  bhishma  ?', 'shantanu', 'Dron', 'Raghu', 'Ram', 1, 1);
+INSERT INTO `es_mcq_questions` (`question_id`, `testid`, `subject_id`, `question_image`, `question`, `option1`, `option2`, `option3`, `option4`, `answer`, `que_status`) VALUES
+(7, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question ?</p>\r\n</body>\r\n</html>', 'option1', 'option2', 'option3', 'option4', 1, 1),
+(8, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question 2018</p>\r\n</body>\r\n</html>\r\n', 'aa', 'b', 'c', 'd', 1, 1),
+(9, 4, NULL, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is prime minister of India ?</p>\r\n</body>\r\n</html>', 'modi', 'nehru', 'vajpeyi', 'kalam', 1, 1),
+(10, 4, NULL, '982055_img.png', '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is lady in a history has 5 husbands ?</p>\r\n</body>\r\n</html>\r\n', 'Yashodaji', 'Rukmaniji', 'Draupadiji', 'Kuntiji', 2, 1),
+(13, 4, NULL, '755768_pic_market.jpg', '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is father of <b>bhishma ?</b></p>\r\n</body>\r\n</html>', 'shantanu', 'Dron', 'Raghu', 'Ram', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2166,7 +2169,7 @@ INSERT INTO `es_mcq_result` (`result_id`, `test_id`, `student_id`, `que_id`, `an
 CREATE TABLE `es_mcq_test` (
   `test_id` int(11) NOT NULL,
   `class_id` int(11) DEFAULT NULL COMMENT 'Reference of class table',
-  `subject_id` int(11) DEFAULT NULL,
+  `subject_id` varchar(55) DEFAULT NULL,
   `test_name` varchar(55) DEFAULT NULL,
   `no_of_question` int(3) DEFAULT NULL,
   `negative_marking` tinyint(3) NOT NULL DEFAULT '0',
@@ -2189,10 +2192,10 @@ CREATE TABLE `es_mcq_test` (
 --
 
 INSERT INTO `es_mcq_test` (`test_id`, `class_id`, `subject_id`, `test_name`, `no_of_question`, `negative_marking`, `weightage`, `from_date`, `to_date`, `duration`, `start_time`, `end_time`, `created_by`, `updated_by`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 3, 'monthly', 10, 25, 2, '2018-06-29 18:30:00', '2018-06-29 18:30:00', 10, '05:30:00', '05:30:00', NULL, NULL, 1, '0000-00-00 00:00:00', '2018-07-14 06:30:47', NULL),
-(2, 2, 2, 'yearly', 10, 0, NULL, '2018-06-29 18:30:00', '2018-06-29 18:30:00', 10, '00:20:18', '00:20:18', NULL, NULL, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL),
-(3, 2, 6, 'Prely test', 10, 25, 4, '2018-07-12 18:30:00', '2018-07-18 18:30:00', 30, '05:30:00', '05:30:00', NULL, NULL, 1, '2018-07-01 07:24:09', '2018-07-14 06:33:04', NULL),
-(4, 1, 1, 'Quarterly', 10, 0, NULL, '2018-07-12 18:30:00', '2018-07-19 18:30:00', 30, '12:55:00', '01:30:00', NULL, NULL, 1, '2018-07-12 07:07:16', '2018-07-12 07:07:16', NULL);
+(1, 1, '3', 'monthly', 10, 25, 2, '2018-06-29 18:30:00', '2018-06-29 18:30:00', 10, '05:30:00', '05:30:00', NULL, NULL, 1, '0000-00-00 00:00:00', '2018-07-21 04:31:08', NULL),
+(2, 1, '3', 'yearly', 10, 25, 4, '2018-06-29 18:30:00', '2018-06-29 18:30:00', 10, '05:30:00', '05:30:00', NULL, NULL, 1, '0000-00-00 00:00:00', '2018-07-20 01:06:20', '2018-07-21 03:11:27'),
+(3, 2, '6', 'Prely test', 10, 25, 4, '2018-07-12 18:30:00', '2018-07-18 18:30:00', 30, '05:30:00', '05:30:00', NULL, NULL, 1, '2018-07-01 07:24:09', '2018-07-14 06:33:04', NULL),
+(4, 6, '1,3,2', 'Quarterly', 10, 0, 4, '2018-07-21 18:30:00', '2018-07-26 18:30:00', 30, '05:30:00', '05:30:00', NULL, NULL, 1, '2018-07-12 07:07:16', '2018-07-20 01:07:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -3262,16 +3265,16 @@ INSERT INTO `es_staff` (`es_staffid`, `attendance_machine_id`, `st_postaplied`, 
 (2, '', '', 'VIBHA', 'KHATRI', 'Female', 'NIRAJ', '1980-03-21', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'vibhakhatri21@gmail.com', '', 'F.Y.B.Com.', ' Pre primary montesory course', '', '', '', '', '', '', '', '', '', '', '', '', '', '7 YEARS', '', '', 'Plot no.43/44 Dwanil ban., Ganshyam Park 2, Baroi Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9978103292', 'Plot no.43/44 Dwanil ban., Ganshyam Park 2, Baroi Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9978103292', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '2', '1', '', '0000-00-01', 'userphoto.gif', 'accepted', 'notissued', 'vibhakhatri', 'vibhakhatri', 'pink.css', '0', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (3, '', '', 'POOJA', 'POPAT', 'Female', 'PARAG', '1981-08-31', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'poojapopat@gmail.com', '', 'B.Com.', 'L.L.B.', '', '', '', '', '', '', '', '', '', '', 'TEACHER', 'MIS ASSISTANT', '', '3 YEARS', '2 YEARS', '', 'S-4, Rajlaxmi Palace, Near Adani Guest House, Old Petrol Pump, Baroi Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9428596757', 'S-4, Rajlaxmi Palace, Near Adani Guest House, Old Petrol Pump, Baroi Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9428596757', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '2', '1', '', '0000-00-02', 'userphoto.gif', 'accepted', 'notissued', 'poojapopat', 'poojapopat', 'pink.css', '0', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (4, '', '', 'TEJAL', 'PATEL', 'Female', 'CHETAN', '1988-10-11', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'pateltejal417@gmail.com', '', 'M.A.', 'B.Ed.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ' A-14/7 Samudra Township, Old Port Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9429561401', ' A-14/7 Samudra Township, Old Port Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9429561401', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-03', 'userphoto.gif', 'accepted', 'notissued', 'tejalpatel', 'tejalpatel', 'pink.css', '3', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
-(5, '', '', 'AARTI', 'GOSAI', 'Female', 'VIJAY', '1989-03-16', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'OBC', '', '', 'M.A.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2 YEARS', '', '', 'B 25/11 , shantivan teacher''s colony at Nana kapaya , Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7433960533', 'B 25/11 , shantivan teacher''s colony at Nana kapaya , Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7433960533', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-04', 'userphoto.gif', 'accepted', 'notissued', 'aartigusai', 'aartigusai', 'pink.css', '4', '0', '', '', '', '', '1,2,3,4', 'A+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
+(5, '', '', 'AARTI', 'GOSAI', 'Female', 'VIJAY', '1989-03-16', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'OBC', '', '', 'M.A.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2 YEARS', '', '', 'B 25/11 , shantivan teacher\'s colony at Nana kapaya , Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7433960533', 'B 25/11 , shantivan teacher\'s colony at Nana kapaya , Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7433960533', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-04', 'userphoto.gif', 'accepted', 'notissued', 'aartigusai', 'aartigusai', 'pink.css', '4', '0', '', '', '', '', '1,2,3,4', 'A+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (6, '', '', 'MANISHA', 'SHARMA', 'Female', 'RAJESH', '1984-08-27', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'myr1@gmail.com', '', 'M.Com.', 'PGDCA', '', '', '', '', '', '', '', '', '', '', 'COMPUTER TEACHER', 'HR & ACCOUNTANT', '', '2.5 YEARS', '3 YEARS', '', 'B-68/4, Samudra Township,Mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9228289454', 'B-68/4, Samudra Township,Mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9228289454', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-05', 'userphoto.gif', 'accepted', 'notissued', 'manishasharma', 'manishasharma', 'pink.css', '4', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (7, '', '', 'VAISHALI', 'PATEL', 'Female', 'CHIRAG', '1986-03-16', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'cp8619825@gmail.com', '', 'F.Y.B.A.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Jasraj nagar plot no 14/15 baroi road mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9624749190', 'Jasraj nagar plot no 14/15 baroi road mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9624749190', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-06', 'userphoto.gif', 'accepted', 'notissued', 'vaishalipatel', 'vaishalipatel', 'pink.css', '1', '0', '', '', '', '', '1,2,3,4', '', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (8, '', '', 'JULI', 'PITHDIYA', 'Female', 'JAGDISHBHAI', '1997-06-23', '', '', 0, 'Indian', '', '', 'Unmarried', '', '', '', '', '', 'OBC', 'julipithadiya236@gmail.com', '', 'T.Y.B.Com.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Vrushabh nagar, plot no. 85 , baroi road , mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9978253493', 'Vrushabh nagar, plot no. 85 , baroi road , mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9978253493', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-07', 'userphoto.gif', 'accepted', 'notissued', 'julipatel', 'julipatel', 'pink.css', '1', '0', '', '', '', '', '1,2,3,4', '', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (9, '', '', 'GEETANJALI', 'GUPTA', 'Female', 'VISHWAS', '1982-09-11', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', '', '', 'B.A.', 'I.G.D.', '', '', '', '', '', '', '', '', '', '', 'TEACHER', '', '', '12 YEARS', '', '', 'Rajlaxmi Palace, First Floor , Room No. 3. Nr. Adani Guest House, Old Petrol Pump, Baroi Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7984099960', 'Rajlaxmi Palace, First Floor , Room No. 3. Nr. Adani Guest House, Old Petrol Pump, Baroi Road', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7984099960', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-08', 'userphoto.gif', 'accepted', 'notissued', 'geetanjaligupta', 'geetanjaligupta', 'pink.css', '2', '0', '', '', '', '', '1,2,3,4', 'O+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (10, '', '', 'DHARMISHTA', 'GODHANIA', 'Female', 'SHAILESH', '1994-04-29', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'dkateliya84@gmail.com', '', 'B.Com', '', '', '', '', '', '', '', '', '', '', '', 'ADMIN', '', '', '1 YEAR', '', '', 'Plot no.44, Jasraj Nagar, Baroi road, Mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '8689960669', 'Plot no.44, Jasraj Nagar, Baroi road, Mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '8689960669', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-09', 'userphoto.gif', 'accepted', 'notissued', 'dharmishtagodhania', 'dharmishtagodhania', 'pink.css', '0', '0', '', '', '', '', '1,2,3,4', ' O+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
-(11, '', '', 'DHARA', 'VYAS', 'Female', 'KALPAK', '1990-11-21', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'dharadave6@gmail', '', 'M.Com.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '1 YEAR', '', '', 'Prisha park, parth residency, Near ghanshym park,block no. 17,"Mauleshwari"krupa , mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9714533406', 'Prisha park, parth residency, Near ghanshym park,block no. 17,"Mauleshwari"krupa , mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9714533406', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-10', 'userphoto.gif', 'accepted', 'notissued', 'dharavyas', 'dharavyas', 'pink.css', '2', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
+(11, '', '', 'DHARA', 'VYAS', 'Female', 'KALPAK', '1990-11-21', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'General', 'dharadave6@gmail', '', 'M.Com.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '1 YEAR', '', '', 'Prisha park, parth residency, Near ghanshym park,block no. 17,\"Mauleshwari\"krupa , mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9714533406', 'Prisha park, parth residency, Near ghanshym park,block no. 17,\"Mauleshwari\"krupa , mundra.', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9714533406', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-10', 'userphoto.gif', 'accepted', 'notissued', 'dharavyas', 'dharavyas', 'pink.css', '2', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (12, '', '', 'POOJA', 'PANCHAL', 'Female', 'NAVIN', '1993-02-09', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'OBC', 'panchalp92@gmail.com', '', 'B.Com.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2 YEAR', '', '', 'C-2/4 Samudra Township,Old bandar road, Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9879009990', 'C-2/4 Samudra Township,Old bandar road, Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9879009990', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '4', '1', '', '0000-00-11', 'userphoto.gif', 'accepted', 'notissued', 'poojapanchal', 'poojapanchal', 'pink.css', '0', '0', '', '', '', '', '1,2,3,4', 'O+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (13, '', '', 'VAISHALI', 'PATEL', 'Female', 'DEVENDRA', '1986-02-17', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'OBC', 'vaisu2117@gmail.com', '', 'Diploma engineer', '', '', '', '', '', '', '', '', '', '', '', 'TEACHER', '', '', '3 YEAR', '', '', 'A-37/11, Samudra Township,Old port road, Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9974064166', 'A-37/11, Samudra Township,Old port road, Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9974064166', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-12', 'userphoto.gif', 'accepted', 'notissued', 'vaishalipatel', 'vaishalipatel', 'pink.css', '3', '0', '', '', '', '', '1,2,3,4', 'O+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
-(14, '', '', 'RUPA', 'CHAVHAN', 'Female', 'HASMUKHBHAI', '1982-10-26', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', '', 'chavhan3280@gmail.com', '', 'S.Y.B.A.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '"Krishna-Sadan",plot no. 23,opp.of Axis Bank,mahavir nagar,Baroi Road,Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7600056859', '"Krishna-Sadan",plot no. 23,opp.of Axis Bank,mahavir nagar,Baroi Road,Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7600056859', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-13', 'userphoto.gif', 'accepted', 'notissued', 'rupachavhan', 'rupachavhan', 'pink.css', '5', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
+(14, '', '', 'RUPA', 'CHAVHAN', 'Female', 'HASMUKHBHAI', '1982-10-26', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', '', 'chavhan3280@gmail.com', '', 'S.Y.B.A.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '\"Krishna-Sadan\",plot no. 23,opp.of Axis Bank,mahavir nagar,Baroi Road,Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7600056859', '\"Krishna-Sadan\",plot no. 23,opp.of Axis Bank,mahavir nagar,Baroi Road,Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '7600056859', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-13', 'userphoto.gif', 'accepted', 'notissued', 'rupachavhan', 'rupachavhan', 'pink.css', '5', '0', '', '', '', '', '1,2,3,4', 'B+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (15, '', '', 'PANNABEN', 'NAT', 'Female', 'P.', '2000-02-23', '', '', 0, 'Indian', '', '', 'Unmarried', '', '', '', '', '', 'OBC', '', '', 'S.S.C.', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Shilp vatika, Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9913390374', 'Shilp vatika, Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9913390374', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-14', 'userphoto.gif', 'accepted', 'notissued', 'pannanat', 'pannanat', 'pink.css', '6', '0', '', '', '', '', '1,2,3,4', '', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (16, '', '', 'RANJAN', 'JADHAV', 'Female', 'P.', '1976-02-29', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'SC', 'r.jadhav.p@gmail.com', '', 'B.A.', 'PRI.P.T.C.', '', '', '', '', '', '', '', '', '', '', '', '', '', '8 YEAR', '', '', 'Sthanak Chowk,near Kuvarji Kaniya house,Baroi', 'Baroi, Mundra', '370421', '', 'Gujarat', '', 'India', '9712331587', 'Sthanak Chowk,near Kuvarji Kaniya house,Baroi', 'Baroi, Mundra', '370421', '', 'Gujarat', '', 'India', '9712331587', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-15', 'userphoto.gif', 'accepted', 'notissued', 'ranjanjadhav', 'ranjanjadhav', 'pink.css', '5', '0', '', '', '', '', '1,2,3,4', 'O+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
 (17, '', '', 'RESHMA', 'KHALIFA', 'Female', 'IMRAN', '1993-06-10', '', '', 0, 'Indian', '', '', 'Married', '', '', '', '', '', 'OBC', 'khalifareshma8909@gmail.com', '', 'P.T.C.Montesory Teacher Training', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Near Bukhari Dargah,Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9925964695', 'Near Bukhari Dargah,Mundra', 'Mundra', '370421', '', 'Gujarat', '', 'India', '9925964695', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'added', '', '0', '2017-04-01', '3', '1', '', '0000-00-16', 'userphoto.gif', 'accepted', 'notissued', 'reshmakhalifa', 'reshmakhalifa', 'pink.css', '2', '0', '', '', '', '', '1,2,3,4', 'AB+', 'teaching', '', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'active'),
@@ -3368,7 +3371,7 @@ CREATE TABLE `es_studymaterial` (
 INSERT INTO `es_studymaterial` (`es_studymaterialid`, `sm_class_id`, `sm_subject_id`, `sm_name`, `sm_description`, `sm_attachment`, `sm_createdon`, `person_type`, `created_by`, `status`) VALUES
 (1, '1', '1', 'demo', 'zXcdzsc', '', '0000-00-00', 'admin', 1, 'deleted'),
 (2, '1', '1', 'demo', 'asdasda', 'txt', '0000-00-00', 'admin', 1, 'deleted'),
-(3, '1', '1', 'test123', '<span style="font-weight: bold;">Sdasda</span>', 'png', '2018-04-12', 'admin', 1, 'deleted'),
+(3, '1', '1', 'test123', '<span style=\"font-weight: bold;\">Sdasda</span>', 'png', '2018-04-12', 'admin', 1, 'deleted'),
 (4, '1', '1', 'staff testing', '<p>staff testing demo&nbsp;&nbsp;&nbsp;&nbsp;<br></p>', 'txt', '2018-04-10', 'teacher', 2, 'deleted'),
 (5, '1', '1', 'test123', 'asfdsdfdfsdf', 'png', '2018-04-13', 'teacher', 2, 'deleted'),
 (6, '6', '', 'demo', 'Sdads', 'png', '2018-04-19', 'admin', 1, 'active'),
@@ -5874,8 +5877,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`User_ID`, `User_Image`, `User_First_Name`, `User_Last_Name`, `User_Username`, `User_Usertype`, `User_Birthdate`, `User_Gender`, `User_Contact_No`, `User_Email`, `User_Password`, `User_SQ`, `User_SA`, `User_Editor`, `User_Created_Date`, `User_Last_Modified`, `User_Rights`, `CompanyName`, `CompanyID`, `CompanyAddress`, `BranchID`, `BranchAddress`, `BranchName`, `YearID`, `CurrentYear`, `BGONE`, `SGONE`, `BGTWO`, `SGTWO`, `BGTHR`, `SGTHR`, `BGFOU`, `SGFOU`, `BGFIV`, `SGFIV`, `BGSIX`, `SGSIX`, `BGSEV`, `SGSEV`) VALUES
-(1, NULL, 'Admin', 'User', 'admin', 'A', '1991-12-23', 'Female', 9979994369, 'hardikmanglani@gmail.com', 'admin95/', 'What is your Mother''s Maiden name?', 'xyz', 'Self', '2016-07-01 00:00:00', '2016-07-09 07:00:02', 'Everything', 'Gajawani School', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, NULL, 'Clerk', 'User', 'clerk', 'B', '1991-12-23', 'Male', 9876543210, 'p@p.com', '123456', 'What is your Mother''s Maiden name?', 'xyz', 'Self', '2016-07-01 00:00:00', '2016-07-09 07:00:10', 'Limited', 'Gajwani School', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1, NULL, 'Admin', 'User', 'admin', 'A', '1991-12-23', 'Female', 9979994369, 'hardikmanglani@gmail.com', 'admin95/', 'What is your Mother\'s Maiden name?', 'xyz', 'Self', '2016-07-01 00:00:00', '2016-07-09 07:00:02', 'Everything', 'Gajawani School', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, NULL, 'Clerk', 'User', 'clerk', 'B', '1991-12-23', 'Male', 9876543210, 'p@p.com', '123456', 'What is your Mother\'s Maiden name?', 'xyz', 'Self', '2016-07-01 00:00:00', '2016-07-09 07:00:10', 'Limited', 'Gajwani School', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (4, NULL, 'Clerk2', 'user', 'clerk2', 'B', '2001-12-12', 'Male', 9874563210, 'p@p.com', '123456', 'What is your favorite book name?', '123456', NULL, '2016-07-04 00:00:00', '2016-07-09 07:00:15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (5, NULL, 'Official', 'Official', 'official', 'B', '2001-12-12', 'Male', 9874563210, 'p@p.com', '123456', 'What is your favorite book name?', '123456', NULL, '2016-07-09 00:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (6, NULL, 'Official Staff Manager', 'Manager', 'manager', 'C', '2001-12-12', 'Male', 9874563210, 'p@p.com', '123456', 'What is your favorite book name?', '123456', NULL, '2016-07-09 00:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -7395,1171 +7398,1405 @@ ALTER TABLE `voucherhead`
 --
 ALTER TABLE `addmission`
   MODIFY `add_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `attendancesheet`
 --
 ALTER TABLE `attendancesheet`
   MODIFY `attendance_key` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=205;
+
 --
 -- AUTO_INCREMENT for table `attendence`
 --
 ALTER TABLE `attendence`
   MODIFY `att_ID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
   MODIFY `category_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `childfeereceipt`
 --
 ALTER TABLE `childfeereceipt`
   MODIFY `childfee_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `devise_user_details`
 --
 ALTER TABLE `devise_user_details`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_addon_modules`
 --
 ALTER TABLE `es_addon_modules`
   MODIFY `addon_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_admins`
 --
 ALTER TABLE `es_admins`
   MODIFY `es_adminsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
 --
 -- AUTO_INCREMENT for table `es_allowencemaster`
 --
 ALTER TABLE `es_allowencemaster`
   MODIFY `es_allowencemasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_assignment`
 --
 ALTER TABLE `es_assignment`
   MODIFY `es_assignmentid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `es_attemptcerti`
 --
 ALTER TABLE `es_attemptcerti`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_attend_staff`
 --
 ALTER TABLE `es_attend_staff`
   MODIFY `es_attend_staffid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_attend_student`
 --
 ALTER TABLE `es_attend_student`
   MODIFY `es_attend_studentid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_bonafied`
 --
 ALTER TABLE `es_bonafied`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `es_bookissue`
 --
 ALTER TABLE `es_bookissue`
   MODIFY `es_bookissueid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_booklets`
 --
 ALTER TABLE `es_booklets`
   MODIFY `booklet_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_bookreturns`
 --
 ALTER TABLE `es_bookreturns`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_book_reservation`
 --
 ALTER TABLE `es_book_reservation`
   MODIFY `reserv_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_candidate`
 --
 ALTER TABLE `es_candidate`
   MODIFY `es_candidateid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_caste`
 --
 ALTER TABLE `es_caste`
   MODIFY `caste_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `es_categorylibrary`
 --
 ALTER TABLE `es_categorylibrary`
   MODIFY `es_categorylibraryid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_chapters`
 --
 ALTER TABLE `es_chapters`
   MODIFY `chapter_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_charcerti`
 --
 ALTER TABLE `es_charcerti`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_classes`
 --
 ALTER TABLE `es_classes`
   MODIFY `es_classesid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `es_classifieds`
 --
 ALTER TABLE `es_classifieds`
   MODIFY `es_classifiedsid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_deductionmaster`
 --
 ALTER TABLE `es_deductionmaster`
   MODIFY `es_deductionmasterid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `es_departments`
 --
 ALTER TABLE `es_departments`
   MODIFY `es_departmentsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `es_deptposts`
 --
 ALTER TABLE `es_deptposts`
   MODIFY `es_deptpostsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `es_dispatch`
 --
 ALTER TABLE `es_dispatch`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_dispatch_entry`
 --
 ALTER TABLE `es_dispatch_entry`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_division`
 --
 ALTER TABLE `es_division`
   MODIFY `es_divisionid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `es_eligibilitycerti`
 --
 ALTER TABLE `es_eligibilitycerti`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_enquiry`
 --
 ALTER TABLE `es_enquiry`
   MODIFY `es_enquiryid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_exam`
 --
 ALTER TABLE `es_exam`
   MODIFY `es_examid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_examfee`
 --
 ALTER TABLE `es_examfee`
   MODIFY `exam_fee_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_exam_academic`
 --
 ALTER TABLE `es_exam_academic`
   MODIFY `es_exam_academicid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_exam_details`
 --
 ALTER TABLE `es_exam_details`
   MODIFY `es_exam_detailsid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_expcerti`
 --
 ALTER TABLE `es_expcerti`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_fa_groups`
 --
 ALTER TABLE `es_fa_groups`
   MODIFY `es_fa_groupsid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_feemaster`
 --
 ALTER TABLE `es_feemaster`
   MODIFY `es_feemasterid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
 --
 -- AUTO_INCREMENT for table `es_feepaid`
 --
 ALTER TABLE `es_feepaid`
   MODIFY `fid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `es_feepaid_new_details`
 --
 ALTER TABLE `es_feepaid_new_details`
   MODIFY `fp_det_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `es_feesnotice`
 --
 ALTER TABLE `es_feesnotice`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_fee_inst_last_date`
 --
 ALTER TABLE `es_fee_inst_last_date`
   MODIFY `inst_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_finance_master`
 --
 ALTER TABLE `es_finance_master`
   MODIFY `es_finance_masterid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `es_fine_charged_collected`
 --
 ALTER TABLE `es_fine_charged_collected`
   MODIFY `es_fcc_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_fine_master`
 --
 ALTER TABLE `es_fine_master`
   MODIFY `es_fine_masterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_groups`
 --
 ALTER TABLE `es_groups`
   MODIFY `es_groupsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `es_holidaynoti`
 --
 ALTER TABLE `es_holidaynoti`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_holidays`
 --
 ALTER TABLE `es_holidays`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `es_hostelbuld`
 --
 ALTER TABLE `es_hostelbuld`
   MODIFY `es_hostelbuldid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_hostelperson_item`
 --
 ALTER TABLE `es_hostelperson_item`
   MODIFY `es_hostelperson_itemid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_hostelroom`
 --
 ALTER TABLE `es_hostelroom`
   MODIFY `es_hostelroomid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_hostel_charges`
 --
 ALTER TABLE `es_hostel_charges`
   MODIFY `es_hostel_charges_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_hostel_health`
 --
 ALTER TABLE `es_hostel_health`
   MODIFY `es_hostel_healthid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_idcard_image`
 --
 ALTER TABLE `es_idcard_image`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_incharge`
 --
 ALTER TABLE `es_incharge`
   MODIFY `incharge_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_institutes`
 --
 ALTER TABLE `es_institutes`
   MODIFY `inst_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_inventory`
 --
 ALTER TABLE `es_inventory`
   MODIFY `es_inventoryid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_category`
 --
 ALTER TABLE `es_in_category`
   MODIFY `es_in_categoryid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `es_in_goods_issue`
 --
 ALTER TABLE `es_in_goods_issue`
   MODIFY `es_in_goods_issueid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- AUTO_INCREMENT for table `es_in_goods_issue_items`
 --
 ALTER TABLE `es_in_goods_issue_items`
   MODIFY `es_in_goods_issue_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_goods_issue_requests`
 --
 ALTER TABLE `es_in_goods_issue_requests`
   MODIFY `es_in_goods_issueid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_goods_issue_request_items`
 --
 ALTER TABLE `es_in_goods_issue_request_items`
   MODIFY `es_in_goods_issue_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_goods_receipt_note`
 --
 ALTER TABLE `es_in_goods_receipt_note`
   MODIFY `grn_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_goods_receipt_note_items`
 --
 ALTER TABLE `es_in_goods_receipt_note_items`
   MODIFY `es_in_goods_receipt_note_itemsid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_item_master`
 --
 ALTER TABLE `es_in_item_master`
   MODIFY `es_in_item_masterid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `es_in_orders`
 --
 ALTER TABLE `es_in_orders`
   MODIFY `es_in_ordersid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_orders_items`
 --
 ALTER TABLE `es_in_orders_items`
   MODIFY `es_order_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_quotation_requests`
 --
 ALTER TABLE `es_in_quotation_requests`
   MODIFY `rfq_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_in_supplier_master`
 --
 ALTER TABLE `es_in_supplier_master`
   MODIFY `es_in_supplier_masterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_issueloan`
 --
 ALTER TABLE `es_issueloan`
   MODIFY `es_issueloanid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_knowledge_articles`
 --
 ALTER TABLE `es_knowledge_articles`
   MODIFY `es_knowledge_articlesid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_knowledge_base`
 --
 ALTER TABLE `es_knowledge_base`
   MODIFY `es_knowledge_baseid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_leavemaster`
 --
 ALTER TABLE `es_leavemaster`
   MODIFY `es_leavemasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_leave_request`
 --
 ALTER TABLE `es_leave_request`
   MODIFY `es_leave_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `es_ledger`
 --
 ALTER TABLE `es_ledger`
   MODIFY `es_ledgerid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `es_libaraypublisher`
 --
 ALTER TABLE `es_libaraypublisher`
   MODIFY `es_libaraypublisherid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_libbook`
 --
 ALTER TABLE `es_libbook`
   MODIFY `es_libbookid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_libbookfinedet`
 --
 ALTER TABLE `es_libbookfinedet`
   MODIFY `es_libbookfinedetid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_libfine`
 --
 ALTER TABLE `es_libfine`
   MODIFY `es_libfineid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_loanmaster`
 --
 ALTER TABLE `es_loanmaster`
   MODIFY `es_loanmasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_loanpayment`
 --
 ALTER TABLE `es_loanpayment`
   MODIFY `es_loanpaymentid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_marks`
 --
 ALTER TABLE `es_marks`
   MODIFY `es_marksid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_mcq_questions`
 --
 ALTER TABLE `es_mcq_questions`
   MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
 --
 -- AUTO_INCREMENT for table `es_mcq_result`
 --
 ALTER TABLE `es_mcq_result`
   MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `es_mcq_test`
 --
 ALTER TABLE `es_mcq_test`
   MODIFY `test_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `es_messages`
 --
 ALTER TABLE `es_messages`
   MODIFY `es_messagesid` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `es_message_documents`
 --
 ALTER TABLE `es_message_documents`
   MODIFY `doc_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_modules_alloted`
 --
 ALTER TABLE `es_modules_alloted`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `es_new_timetable`
 --
 ALTER TABLE `es_new_timetable`
   MODIFY `new_time_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_notice`
 --
 ALTER TABLE `es_notice`
   MODIFY `es_noticeid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `es_notice_messages`
 --
 ALTER TABLE `es_notice_messages`
   MODIFY `es_messagesid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `es_offerletter`
 --
 ALTER TABLE `es_offerletter`
   MODIFY `es_offerletterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_old_balances`
 --
 ALTER TABLE `es_old_balances`
   MODIFY `ob_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_old_balances_paid`
 --
 ALTER TABLE `es_old_balances_paid`
   MODIFY `obp_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_otherletter_formats`
 --
 ALTER TABLE `es_otherletter_formats`
   MODIFY `letter_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_other_fine_dettails`
 --
 ALTER TABLE `es_other_fine_dettails`
   MODIFY `otherfine_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_payslipdetails`
 --
 ALTER TABLE `es_payslipdetails`
   MODIFY `es_payslipdetailsid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_pfmaster`
 --
 ALTER TABLE `es_pfmaster`
   MODIFY `es_pfmasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_photogallery`
 --
 ALTER TABLE `es_photogallery`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_preadmission`
 --
 ALTER TABLE `es_preadmission`
   MODIFY `es_preadmissionid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+
 --
 -- AUTO_INCREMENT for table `es_preadmission_details`
 --
 ALTER TABLE `es_preadmission_details`
   MODIFY `es_preadmission_detailsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+
 --
 -- AUTO_INCREMENT for table `es_questionbank`
 --
 ALTER TABLE `es_questionbank`
   MODIFY `q_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_requirement`
 --
 ALTER TABLE `es_requirement`
   MODIFY `es_requirementid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_resignation`
 --
 ALTER TABLE `es_resignation`
   MODIFY `es_resignationid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_roomallotment`
 --
 ALTER TABLE `es_roomallotment`
   MODIFY `es_roomallotmentid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_sections`
 --
 ALTER TABLE `es_sections`
   MODIFY `section_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_sections_student`
 --
 ALTER TABLE `es_sections_student`
   MODIFY `section_student_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_security`
 --
 ALTER TABLE `es_security`
   MODIFY `es_securityid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_shortlisted`
 --
 ALTER TABLE `es_shortlisted`
   MODIFY `es_shortlistedid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_staff`
 --
 ALTER TABLE `es_staff`
   MODIFY `es_staffid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
 --
 -- AUTO_INCREMENT for table `es_stationary`
 --
 ALTER TABLE `es_stationary`
   MODIFY `stationary_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_stationary_payment`
 --
 ALTER TABLE `es_stationary_payment`
   MODIFY `st_pay_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_studentabsentnoti`
 --
 ALTER TABLE `es_studentabsentnoti`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_studymaterial`
 --
 ALTER TABLE `es_studymaterial`
   MODIFY `es_studymaterialid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
 --
 -- AUTO_INCREMENT for table `es_subcategory`
 --
 ALTER TABLE `es_subcategory`
   MODIFY `es_subcategoryid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_subject`
 --
 ALTER TABLE `es_subject`
   MODIFY `es_subjectid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
 --
 -- AUTO_INCREMENT for table `es_taxmaster`
 --
 ALTER TABLE `es_taxmaster`
   MODIFY `es_taxmasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_tcmaster`
 --
 ALTER TABLE `es_tcmaster`
   MODIFY `es_tcmasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_tcstudent`
 --
 ALTER TABLE `es_tcstudent`
   MODIFY `es_tcstudentid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_timetable`
 --
 ALTER TABLE `es_timetable`
   MODIFY `es_timetableid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_timetablemaster`
 --
 ALTER TABLE `es_timetablemaster`
   MODIFY `es_timetablemasterid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_timetable_staff`
 --
 ALTER TABLE `es_timetable_staff`
   MODIFY `es_st_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `es_timetable_subject`
 --
 ALTER TABLE `es_timetable_subject`
   MODIFY `es_sub_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `es_timetable_subjects`
 --
 ALTER TABLE `es_timetable_subjects`
   MODIFY `ts_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_tips`
 --
 ALTER TABLE `es_tips`
   MODIFY `tip_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_transferstudent`
 --
 ALTER TABLE `es_transferstudent`
   MODIFY `id` int(1) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_translist`
 --
 ALTER TABLE `es_translist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_transport`
 --
 ALTER TABLE `es_transport`
   MODIFY `es_transportid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_transport_allots`
 --
 ALTER TABLE `es_transport_allots`
   MODIFY `driver_allot_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_transport_drivers`
 --
 ALTER TABLE `es_transport_drivers`
   MODIFY `driver_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_transport_maintenance`
 --
 ALTER TABLE `es_transport_maintenance`
   MODIFY `es_transport_maintenanceid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_transport_places`
 --
 ALTER TABLE `es_transport_places`
   MODIFY `tr_place_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_board`
 --
 ALTER TABLE `es_trans_board`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_board_allocation_to_student`
 --
 ALTER TABLE `es_trans_board_allocation_to_student`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_driver_allocation_to_vehicle`
 --
 ALTER TABLE `es_trans_driver_allocation_to_vehicle`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_driver_details`
 --
 ALTER TABLE `es_trans_driver_details`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_fee_details`
 --
 ALTER TABLE `es_trans_fee_details`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_maintenance`
 --
 ALTER TABLE `es_trans_maintenance`
   MODIFY `es_transport_maintenanceid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_payment_history`
 --
 ALTER TABLE `es_trans_payment_history`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_route`
 --
 ALTER TABLE `es_trans_route`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_vehicle`
 --
 ALTER TABLE `es_trans_vehicle`
   MODIFY `es_transportid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_trans_vehicle_allocation_to_board`
 --
 ALTER TABLE `es_trans_vehicle_allocation_to_board`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_tutorials`
 --
 ALTER TABLE `es_tutorials`
   MODIFY `tut_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_undertaking`
 --
 ALTER TABLE `es_undertaking`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_units`
 --
 ALTER TABLE `es_units`
   MODIFY `unit_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_userlogs`
 --
 ALTER TABLE `es_userlogs`
   MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
 --
 -- AUTO_INCREMENT for table `es_videogallery`
 --
 ALTER TABLE `es_videogallery`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_voucher`
 --
 ALTER TABLE `es_voucher`
   MODIFY `es_voucherid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `es_voucherentry`
 --
 ALTER TABLE `es_voucherentry`
   MODIFY `es_voucherentryid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
   MODIFY `event_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
 --
 -- AUTO_INCREMENT for table `exam`
 --
 ALTER TABLE `exam`
   MODIFY `exam_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `exam_marksheet`
 --
 ALTER TABLE `exam_marksheet`
   MODIFY `marksheet_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `feereceipttransection`
 --
 ALTER TABLE `feereceipttransection`
   MODIFY `feereceipt_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `feestype`
 --
 ALTER TABLE `feestype`
   MODIFY `fesstype_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `fees_series`
 --
 ALTER TABLE `fees_series`
   MODIFY `series_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `fees_submission_dates`
 --
 ALTER TABLE `fees_submission_dates`
   MODIFY `fees_submission_dateid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT for table `fee_card_numbering`
 --
 ALTER TABLE `fee_card_numbering`
   MODIFY `fee_card_numbering_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT for table `fm_fee_cards`
 --
 ALTER TABLE `fm_fee_cards`
   MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT for table `fm_fee_card_childs`
 --
 ALTER TABLE `fm_fee_card_childs`
   MODIFY `card_child_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
 --
 -- AUTO_INCREMENT for table `foundations`
 --
 ALTER TABLE `foundations`
   MODIFY `foundation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `gardian`
 --
 ALTER TABLE `gardian`
   MODIFY `gardian_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
   MODIFY `groupid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `him_administrator`
 --
 ALTER TABLE `him_administrator`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_admission`
 --
 ALTER TABLE `him_admission`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_applyteacher`
 --
 ALTER TABLE `him_applyteacher`
   MODIFY `id` int(22) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_country`
 --
 ALTER TABLE `him_country`
   MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_datasheet`
 --
 ALTER TABLE `him_datasheet`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_gallery`
 --
 ALTER TABLE `him_gallery`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_settings`
 --
 ALTER TABLE `him_settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `him_toppers`
 --
 ALTER TABLE `him_toppers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `histry_fm_cards`
 --
 ALTER TABLE `histry_fm_cards`
   MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `isd_class_division`
 --
 ALTER TABLE `isd_class_division`
   MODIFY `class_division_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- AUTO_INCREMENT for table `isd_class_tests`
 --
 ALTER TABLE `isd_class_tests`
   MODIFY `class_test_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `isd_class_test_marks`
 --
 ALTER TABLE `isd_class_test_marks`
   MODIFY `test_marks_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `item_inventory`
 --
 ALTER TABLE `item_inventory`
   MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `ledger_entries`
 --
 ALTER TABLE `ledger_entries`
   MODIFY `ledger_entry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 --
 -- AUTO_INCREMENT for table `login_sessions`
 --
 ALTER TABLE `login_sessions`
   MODIFY `Login_Session_ID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `maintenance_replies`
 --
 ALTER TABLE `maintenance_replies`
   MODIFY `reply_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `maintenance_request`
 --
 ALTER TABLE `maintenance_request`
   MODIFY `req_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_career`
 --
 ALTER TABLE `mlc_career`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_college`
 --
 ALTER TABLE `mlc_college`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_document`
 --
 ALTER TABLE `mlc_document`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_download`
 --
 ALTER TABLE `mlc_download`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_feedback`
 --
 ALTER TABLE `mlc_feedback`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_homenews`
 --
 ALTER TABLE `mlc_homenews`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_news`
 --
 ALTER TABLE `mlc_news`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_newsletters`
 --
 ALTER TABLE `mlc_newsletters`
   MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_school_policies`
 --
 ALTER TABLE `mlc_school_policies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_subscribers`
 --
 ALTER TABLE `mlc_subscribers`
   MODIFY `subid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `mlc_yourcomment`
 --
 ALTER TABLE `mlc_yourcomment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `newsupdate`
 --
 ALTER TABLE `newsupdate`
   MODIFY `news_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `new_allowencemaster_childs`
 --
 ALTER TABLE `new_allowencemaster_childs`
   MODIFY `new_allowencemaster_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `new_deductionmaster_childs`
 --
 ALTER TABLE `new_deductionmaster_childs`
   MODIFY `new_deductionmaster_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `new_payslip_childs`
 --
 ALTER TABLE `new_payslip_childs`
   MODIFY `payslip_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `new_semesters`
 --
 ALTER TABLE `new_semesters`
   MODIFY `semester_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
 --
 -- AUTO_INCREMENT for table `new_survey`
 --
 ALTER TABLE `new_survey`
   MODIFY `survey_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `new_survey_child`
 --
 ALTER TABLE `new_survey_child`
   MODIFY `survey_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `new_survey_option`
 --
 ALTER TABLE `new_survey_option`
   MODIFY `option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
 --
 -- AUTO_INCREMENT for table `new_survey_teacher_group`
 --
 ALTER TABLE `new_survey_teacher_group`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
 --
 -- AUTO_INCREMENT for table `new_taxmaster_childs`
 --
 ALTER TABLE `new_taxmaster_childs`
   MODIFY `new_taxmaster_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `notice_replies`
 --
 ALTER TABLE `notice_replies`
   MODIFY `notice_repliyid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE `notification`
   MODIFY `notification_id` int(2) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `photo_gallery`
 --
 ALTER TABLE `photo_gallery`
   MODIFY `photo_galleryid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
 --
 -- AUTO_INCREMENT for table `photo_gallery_images`
 --
 ALTER TABLE `photo_gallery_images`
   MODIFY `photo_gallery_imageid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
 --
 -- AUTO_INCREMENT for table `pur_req_form_child`
 --
 ALTER TABLE `pur_req_form_child`
   MODIFY `pur_req_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `pur_req_id`
 --
 ALTER TABLE `pur_req_id`
   MODIFY `pur_req_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `qualification`
 --
 ALTER TABLE `qualification`
   MODIFY `reg_ID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `results`
 --
 ALTER TABLE `results`
   MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `result_layouts`
 --
 ALTER TABLE `result_layouts`
   MODIFY `result_layout_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `smsconfig`
 --
 ALTER TABLE `smsconfig`
   MODIFY `configid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `standard`
 --
 ALTER TABLE `standard`
   MODIFY `standard_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
   MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `student_activities`
 --
 ALTER TABLE `student_activities`
   MODIFY `activity_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `student_activity_grades`
 --
 ALTER TABLE `student_activity_grades`
   MODIFY `student_activity_gradesid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `student_activtiy_exam`
 --
 ALTER TABLE `student_activtiy_exam`
   MODIFY `student_activtiy_examid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `student_attendance`
 --
 ALTER TABLE `student_attendance`
   MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- AUTO_INCREMENT for table `student_violation`
 --
 ALTER TABLE `student_violation`
   MODIFY `student_violationid` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `subjects_cat`
 --
 ALTER TABLE `subjects_cat`
   MODIFY `scat_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `supplier_payments`
 --
 ALTER TABLE `supplier_payments`
   MODIFY `supplier_payment_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `supplier_payment_child`
 --
 ALTER TABLE `supplier_payment_child`
   MODIFY `supplier_payment_child_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `tbl_sms_setup`
 --
 ALTER TABLE `tbl_sms_setup`
   MODIFY `tbl_sms_setup_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `tbl_sms_to_student`
 --
 ALTER TABLE `tbl_sms_to_student`
   MODIFY `tbl_sms_to_student_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `teacher_leave_request`
 --
 ALTER TABLE `teacher_leave_request`
   MODIFY `request_id` int(4) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `teacher_planner`
 --
 ALTER TABLE `teacher_planner`
   MODIFY `teacher_plannerid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT for table `teacher_planner_descriptions`
 --
 ALTER TABLE `teacher_planner_descriptions`
   MODIFY `teacher_planner_descriptionid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+
 --
 -- AUTO_INCREMENT for table `teacher_register`
 --
 ALTER TABLE `teacher_register`
   MODIFY `reg_ID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `time_period`
 --
 ALTER TABLE `time_period`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `transectionentry`
 --
 ALTER TABLE `transectionentry`
   MODIFY `trans_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `transport_pickup_points`
 --
 ALTER TABLE `transport_pickup_points`
   MODIFY `tr_place_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `transport_student_allocation`
 --
 ALTER TABLE `transport_student_allocation`
   MODIFY `transport_student_allocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `User_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `voucherhead`
 --
 ALTER TABLE `voucherhead`
   MODIFY `voucher_id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- Constraints for dumped tables
 --
@@ -8751,6 +8988,7 @@ ALTER TABLE `transectionentry`
 --
 ALTER TABLE `transport_student_allocation`
   ADD CONSTRAINT `transport_student_allocation_ibfk_1` FOREIGN KEY (`pickup_point_id`) REFERENCES `transport_pickup_points` (`tr_place_id`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

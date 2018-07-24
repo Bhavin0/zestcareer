@@ -192,7 +192,8 @@
                 'async':'true',
                 'success':function(response) 
                 {
-                    var subject = JSON.parse(response).subject
+                   
+                    var subject = JSON.parse(response).subject;
                     $('#subject-id').html('');
                     for(i=0;i<subject.length;i++)
                     {

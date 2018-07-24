@@ -156,7 +156,7 @@
                                         <div class="col-md-12 col-sm-12 col-xs-12">  
                                             <span class="select-error"></span>
                                         </div>
-                                        <div class="col-md-12 col-sm-12 col-xs-12">  
+                                        <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px;">  
                                             <button type="button" class="btn btn-primary form-choice " id="prev">
                                                 <i class="fa fa-chevron-circle-left"></i>Prev
                                             </button>
@@ -171,13 +171,16 @@
                                 </div>
                                 
                                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-4" id="que-img" style="display: none">
-                                    <img  alt="Question Image" id="question-image" class="img img-responsive" style="height:230px;width:350px;" />
+                                    <img  alt="Question Image" id="question-image" class="img img-responsive" style="height:190px;width:350px;" />
                                 </div>
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-choice" id="que-list" style="margin-top:25px;">
                                     
                                 </div>
                             </div>
+                            <ul class="pagination form-choice" style="display: none">
+                              
+                            </ul>
                         </div>
                     </div> <!-- col-LG-12 -->
                 </div>
@@ -191,9 +194,6 @@
     <script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/jquery-countdown/jquery.countdowntimer.min.js'); ?>"></script>
-    
-
-
     <script type="text/javascript">
         /*Call function after every five minute
         var timeout,html='',flag=1;
@@ -233,302 +233,467 @@
         $(document).ready(function(){
             //findTest();
             $('.fill-test').on('click',function(event){
-                
                 var id = $(this).attr('id');
                 var duration = $('#duration_'+id).text();
                 
                 $('#test_'+$(this).attr('id')).remove();
                     
-                    $.ajax({
-                        url:"?pid=62&action=question&test="+$('#test_unique_'+id).val(),
-                        dataType:"json",
-                        type:"GET",
-                        success:function(response) 
+                $.ajax({
+                    url:"?pid=62&action=question&test="+$('#test_unique_'+id).val()+"&page=1",
+                    dataType:"json",
+                    type:"GET",
+                    success:function(response) 
+                    {                
+                        data = response.question;
+                        var question='';
+                        var seq = 1;
+                        //console.log(response[0]); return false;
+                        $('.test-boxes').hide();
+                        
+                        if(!$.isEmptyObject(data))
                         {
-                            data = response;
-                            var question='';
-                            var seq = 1;
-                            //console.log(response[0]); return false;
-                            $('.test-boxes').hide();
+                            $('.timer').show();
                             
-                            if(!$.isEmptyObject(response))
+                            if(duration>=60)
+                            {   
+                                $('#test-timer').countdowntimer({
+                                    hours:duration/60,
+                                    seconds:00,
+                                    size:"lg",
+                                    timeUp : completeTest
+                                });
+                                console.log($('#test-timer').text());
+                            }
+                            else
                             {
-                                $('.timer').show();
-                                
-                                if(duration>=60)
+                                $('#test-timer').countdowntimer({
+                                    minutes:duration,
+                                    seconds:00,
+                                    size:"lg",
+                                    timeUp : completeTest
+                                });
+                            }
+
+                            $('#ans-form').show();
+                            $('#question_id').val(data[0].question_id);
+
+                            $('#question').html('1 : '+$($($('<div />').html(data[0].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text());                                
+                            $('#curr-que').val('1');
+                        
+                            $('#ans-op1').text('a. '+data[0].option1);
+                            $('#ans-op2').text('b. '+data[0].option2);
+                            $('#ans-op3').text('c. '+data[0].option3);
+                            $('#ans-op4').text('d. '+data[0].option4);
+
+                            $('#prev').val(data[0].testid);
+                            $('#prev').attr('disabled',true);
+                            $('#next').val(data[0].testid);
+                            $('#save_next').val(data[0].testid);
+                            $('#no_of_question').val(data.length);
+                            
+                            if(data[0].question_image!=null) 
+                            {
+                                $('#que-img').show();
+                                $('#question-image').attr("src",data[0].question_image);
+                            }
+                            else
+                            {
+                                $('#que-img').hide();   
+                            }
+                            for(i=0;i<data.length;i++) 
+                            {
+                                if((i+1)==1)
                                 {
-                                    $('#test-timer').countdowntimer({
-                                        hours:duration/60,
-                                        seconds:00,
-                                        size:"lg"
-                                    });
+                                    question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">'+(i+1)+' : <a class="text-success load-que" id="que_'+(i+1)+'" data-params="'+data[i].question_id+'">'+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';   
                                 }
                                 else
                                 {
-                                    
-                                    $('#test-timer').countdowntimer({
-                                        minutes:duration,
-                                        seconds:00,
-                                        size:"lg"
-                                    });
+                                    question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 "><a id="que_'+(i+1)+'" class="load-que" data-params="'+data[i].question_id+'" >'+(i+1)+' : '+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';
+                                }
+                            }
+                            
+                            $('#que-list').html(question);
+                            $('#que-list').hide().fadeIn(500);
+                            
+                            var paginate = '';
+                            for(k=1;k<=Math.ceil(Number(response.total_record)/5);k++) 
+                            {
+                                if(k==1)
+                                {
+                                    paginate+='<li class="active paginate" id="'+k+'"><a>'+k+'</a></li>';
+                                }
+                                else
+                                {
+                                    paginate+='<li><a class="paginate" id="'+k+'">'+k+'</a></li>';   
                                 }
 
-                                $('#ans-form').show();
-                                $('#question_id').val(response[0].question_id);
+                            }
+                            $('.pagination').append(paginate);
+                            $('.pagination').show()
+                        }   
+                    },
+                    error: function(jqXHR, textStatus, errorThrown ) {
+                        console.log(errorThrown);
+                    }
+                });
+            });
+        
+        $('input[type=radio]').on('click',function(){
+            $('.select-error').hide();
+        });
+       
+        $('#save_next').on('click',function(){
+            if($('input[type=radio]:checked').attr('id')==undefined)
+            {
+                $('.select-error').addClass('text-danger');
+                $('.select-error').text('Please Select Answer');
+                $('.select-error').show();
+            }
+            else
+            {
+                $.ajax({
+                    url:"?pid=62&action=question&test="+$(this).val()+"&seq=next&question_id="+$('#question_id').val()+"&ans="+$('input[type=radio]:checked').val()+"&offset="+$('#curr-que').val(),
+                    dataType:"json",
+                    type:"GET",
+                    success:function(response) 
+                    {
+                        $('#prev').attr('disabled',false);
+                        if(response.next_question==0)
+                        {
+                            $('#next').attr('readonly',true);
+                            $('#save_next').attr('readonly',true);
+                        }
+                        else
+                        {   
+                            if(!$.isEmptyObject(response))
+                            {
+                                $('input[type=radio]').attr('checked', false); 
+                                $('#curr-que').val(response.next_question);
+                                $('#question_id').val(response.data.question_id);
+                                $('#question').text(response.next_question+' : '+response.data.question);
+                                $("#que_"+(response.next_question-1)).removeClass('text-success');
+                                $("#que_"+(response.next_question-1)).addClass('text-muted');
 
-                                //$($('<div />').html(response[0].question)).find('p');
-                                $('#question').html('1 : '+$($($('<div />').html(response[0].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text());
-
-                                //+(i+1)+':
-                                
-                                $('#curr-que').val('1');
-                            
-                                $('#ans-op1').text('a. '+response[0].option1);
-                                $('#ans-op2').text('b. '+response[0].option2);
-                                $('#ans-op3').text('c. '+response[0].option3);
-                                $('#ans-op4').text('d. '+response[0].option4);
-
-                                $('#prev').val(response[0].testid);
-                                $('#prev').attr('disabled',true);
-                                $('#next').val(response[0].testid);
-                                $('#save_next').val(response[0].testid);
-                                $('#no_of_question').val(data.length);
-                                
-                                if(response[0].question_image!=null) 
+                                $("#que_"+(response.next_question)).addClass('text-success');
+                                if(response.question_image!=null) 
                                 {
                                     $('#que-img').show();
-                                    $('#question-image').attr("src",response[0].question_image);
+                                    $('#question-image').attr("src",response.question_image);
                                 }
                                 else
                                 {
                                     $('#que-img').hide();   
                                 }
-                                for(i=0;i<data.length;i++) 
-                                {
-                                    if((i+1)==1)
-                                    {
-                                        question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">'+(i+1)+' : <a class="text-success load-que" id="que_'+(i+1)+'" data-params="'+data[i].question_id+'">'+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';   
-                                    }
-                                    else
-                                    {
-                                        question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 "><a id="que_'+(i+1)+'" class="load-que" data-params="'+data[i].question_id+'" >'+(i+1)+' : '+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';
-                                    }
-                                }
                                 
-                                $('#que-list').html(question);
-                                $('#que-list').hide().fadeIn(500);
-                            }   
-                        },
-                        error: function(jqXHR, textStatus, errorThrown ) {
-                            console.log(errorThrown);
-                        }
-                    });
+                                $('#ans-op1').text('a. '+response.data.option1);
+                                $('#ans-op2').text('b. '+response.data.option2);
+                                $('#ans-op3').text('c. '+response.data.option3);
+                                $('#ans-op4').text('d. '+response.data.option4);
+                            }
+                        }                   
+                    },
+                    error: function(jqXHR, textStatus, errorThrown ) 
+                    {
+                        console.log(errorThrown);
+                    }
                 });
+            }
+        });
+
+         $('#prev').on('click',function(){
             
-            $('input[type=radio]').on('click',function(){
-                $('.select-error').hide();
-            });
-           
-            $('#save_next').on('click',function(){
-                if($('input[type=radio]:checked').attr('id')==undefined)
+            $('.select-error').hide();
+            $('#next').attr('disabled',false);
+            $('#save_next').attr('disabled',false);
+            var offset = Number($('#curr-que').val())-1;
+            
+            $.ajax({
+                url:"?pid=62&action=question&test="+$(this).val()+"&seq=prev&question_id="+$('#que_'+(offset+1)).data().params+"&offset="+offset,
+                dataType:"json",
+                type:"GET",
+                success:function(response) 
                 {
-                    $('.select-error').addClass('text-danger');
-                    $('.select-error').text('Please Select Answer');
-                    $('.select-error').show();
-                }
-                else
-                {
-                    $.ajax({
-                        url:"?pid=62&action=question&test="+$(this).val()+"&seq=next&question_id="+$('#question_id').val()+"&ans="+$('input[type=radio]:checked').val()+"&offset="+$('#curr-que').val(),
-                        dataType:"json",
-                        type:"GET",
-                        success:function(response) 
+                    if(!$.isEmptyObject(response))
+                    {
+                        if(Number(response.next_question)==0)
                         {
-                            $('#prev').attr('disabled',false);
-                            if(response.next_question==0)
-                            {
-                                $('#next').attr('readonly',true);
-                                $('#save_next').attr('readonly',true);
-                            }
-                            else
-                            {
+                            $('#prev').attr('disabled',true);
+                        }
 
-                                if(!$.isEmptyObject(response))
+                        $('input[type=radio]').attr('checked', false); 
+                        
+                        $('#curr-que').val(response.next_question+1);
+
+                        //$("#que_"+$('#curr-que').val()).removeClass('text-muted');
+
+                        $("#que_"+Number($('#curr-que').val())).addClass('text-success');
+                        
+                        $("#que_"+(Number($('#curr-que').val())+1)).removeClass('text-success');
+
+                        
+                        $('#question_id').val(response.data.question_id);
+                        
+                        $('#question').text((response.next_question+1)+' : '+response.data.question);
+                        
+                        $('#ans-op1').text('a. '+response.data.option1);
+                        $('#ans-op2').text('b. '+response.data.option2);
+                        $('#ans-op3').text('c. '+response.data.option3);
+                        $('#ans-op4').text('d. '+response.data.option4);
+
+                        if(response.data.answer.answer!=0)  
+                        {
+                            for (var i=1; i<=4; i++) 
+                            {
+                                if(i==response.data.answer.answer)
                                 {
-                                    $('input[type=radio]').attr('checked', false); 
-                                    $('#curr-que').val(response.next_question);
-                                    $('#question_id').val(response.data.question_id);
-                                    $('#question').text(response.next_question+' : '+response.data.question);
-                                    $("#que_"+(response.next_question-1)).removeClass('text-success');
-                                    $("#que_"+(response.next_question-1)).addClass('text-muted');
-                                    //$("#que_"+response.next_question).removeAttr("href");
-
-                                    $("#que_"+(response.next_question)).addClass('text-success');
-
-                                    if(response.question_image!=null) 
-                                    {
-                                        $('#que-img').show();
-                                        $('#question-image').attr("src",response.question_image);
-                                    }
-                                    else
-                                    {
-                                        $('#que-img').hide();   
-                                    }
-                                    
-                                    $('#ans-op1').text('a. '+response.data.option1);
-                                    $('#ans-op2').text('b. '+response.data.option2);
-                                    $('#ans-op3').text('c. '+response.data.option3);
-                                    $('#ans-op4').text('d. '+response.data.option4);
+                                    $('#option'+i).prop('checked',true);
                                 }
-                            }                   
-                        },
-                        error: function(jqXHR, textStatus, errorThrown ) 
-                        {
-                            console.log(errorThrown);
+                            }                                 
                         }
-                    });
-                }
-            });
 
-             $('#prev').on('click',function(){
-                
-                $('.select-error').hide();
-                $('#next').attr('disabled',false);
-                $('#save_next').attr('disabled',false);
-                var offset = Number($('#curr-que').val())-1;
-                
-                $.ajax({
-                    url:"?pid=62&action=question&test="+$(this).val()+"&seq=prev&question_id="+$('#que_'+(offset+1)).data().params+"&offset="+offset,
-                    dataType:"json",
-                    type:"GET",
-                    success:function(response) 
-                    {
-                        if(!$.isEmptyObject(response))
+                        if(response.data.question_image!=null) 
                         {
-                            if(Number(response.next_question)==0)
-                            {
-                                $('#prev').attr('disabled',true);
-                            }
-
-                            $('input[type=radio]').attr('checked', false); 
-                            
-                            $('#curr-que').val(response.next_question+1);
-
-                            //$("#que_"+$('#curr-que').val()).removeClass('text-muted');
-
-                            $("#que_"+Number($('#curr-que').val())).addClass('text-success');
-                            
-                            $("#que_"+(Number($('#curr-que').val())+1)).removeClass('text-success');
-
-                            
-                            $('#question_id').val(response.data.question_id);
-                            
-                            $('#question').text((response.next_question+1)+' : '+response.data.question);
-                            
-                            $('#ans-op1').text('a. '+response.data.option1);
-                            $('#ans-op2').text('b. '+response.data.option2);
-                            $('#ans-op3').text('c. '+response.data.option3);
-                            $('#ans-op4').text('d. '+response.data.option4);
-
-                            if(response.data.answer.answer!=0)  
-                            {
-                                for (var i=1; i<=4; i++) 
-                                {
-                                    if(i==response.data.answer.answer)
-                                    {
-                                        $('#option'+i).prop('checked',true);
-                                    }
-                                }                                 
-                            }
-
-                            if(response.data.question_image!=null) 
-                            {
-                                $('#que-img').show();
-                                $('#question-image').attr("src",response.data.question_image);
-                            }
-                            else
-                            {
-                                $('#que-img').hide();   
-                            }
+                            $('#que-img').show();
+                            $('#question-image').attr("src",response.data.question_image);
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown ) 
-                    {
-                        console.log(errorThrown);
+                        else
+                        {
+                            $('#que-img').hide();   
+                        }
                     }
-                });
-                /*if($('#curr-que').val()==1)
+                },
+                error: function(jqXHR, textStatus, errorThrown ) 
                 {
-                    $('#prev').attr('readonly',true);
-                }*/
-                
-            });
+                    console.log(errorThrown);
+                }
+            });  
+        });
 
-            $('#next').on('click',function(){
-                $('#prev').attr('disabled',false);
-                $('.select-error').hide();
-                $.ajax({
-                    url:"?pid=62&action=question&test="+$(this).val()+"&seq=next&question_id="+$('#question_id').val()+"&offset="+$('#curr-que').val(),
-                    dataType:"json",
-                    type:"GET",
-                    success:function(response) 
+        $('#next').on('click',function(){
+            $('#prev').attr('disabled',false);
+            $('.select-error').hide();
+            var que = Number($('#curr-que').val())
+            $.ajax({
+                url:"?pid=62&action=question&test="+$(this).val()+"&seq=next&question_id="+$("#que_"+(que+1)).attr('data-params')+"&offset="+$('#curr-que').val(),
+                dataType:"json",
+                type:"GET",
+                success:function(response) 
+                {
+                  
+                    if(!$.isEmptyObject(response))
                     {
-                      
-                        if(!$.isEmptyObject(response))
+                        if(Number(response.next_question)==Number($('#no_of_question').val()))
                         {
-                            if(Number(response.next_question)==Number($('#no_of_question').val()))
-                            {
-                                $('#next').attr('disabled',true);
-                            }
-
-                            $('input[type=radio]').attr('checked', false); 
-                           
-                            $('#curr-que').val(response.next_question);
-                            $('#question_id').val(response.data.question_id);
-                            $('#question').text(response.next_question+' : '+response.data.question);
-
-                            $("#que_"+(response.next_question-1)).removeClass('text-success');
-                            $("#que_"+(response.next_question)).addClass('text-success');
-                            
-                            $('#ans-op1').text('a. '+response.data.option1);
-                            $('#ans-op2').text('b. '+response.data.option2);
-                            $('#ans-op3').text('c. '+response.data.option3);
-                            $('#ans-op4').text('d. '+response.data.option4);
-
-                            if(response.data.answer.answer!=0)
-                            {
-                                for (var i=1; i<=4; i++) 
-                                {
-                                    if(i==response.data.answer.answer)
-                                    {
-                                        $('#option'+i).prop('checked',true);
-                                    }
-                                }                                 
-                            }
-
-                            if(response.data.question_image!=null) 
-                            {
-                                $('#que-img').show();
-                                $('#question-image').attr("src",response.data.question_image);
-                            }
-                            else
-                            {
-                                $('#que-img').hide();   
-                            }
+                            $('#next').attr('disabled',true);
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown ) 
-                    {
-                        console.log(errorThrown);
-                    }
-                });
-            });
 
-            $('.load-que').click(function(){
-                console.log('hi');
-                console.log($('.load-que').attr('data-params'));return fasle;
+                        $('input[type=radio]').attr('checked', false); 
+                       
+                        $('#curr-que').val(response.next_question);
+                        $('#question_id').val(response.data.question_id);
+                        $('#question').text(response.next_question+' : '+response.data.question);
+
+                        $("#que_"+(response.next_question-1)).removeClass('text-success');
+                        $("#que_"+(response.next_question)).addClass('text-success');
+                        
+                        $('#ans-op1').text('a. '+response.data.option1);
+                        $('#ans-op2').text('b. '+response.data.option2);
+                        $('#ans-op3').text('c. '+response.data.option3);
+                        $('#ans-op4').text('d. '+response.data.option4);
+
+                        if(response.data.answer.answer!=0)
+                        {
+                            for (var i=1; i<=4; i++) 
+                            {
+                                if(i==response.data.answer.answer)
+                                {
+                                    $('#option'+i).prop('checked',true);
+                                }
+                            }                                 
+                        }
+
+                        if(response.data.question_image!=null) 
+                        {
+                            $('#que-img').show();
+                            $('#question-image').attr("src",response.data.question_image);
+                        }
+                        else
+                        {
+                            $('#que-img').hide();   
+                        }
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown ) 
+                {
+                    console.log(errorThrown);
+                }
             });
         });
-    </script>
-    </body>
+
+        $(document).on('click','.load-que',function()
+        {
+            var index = $(this).attr('id').split('_');
+            
+            $('.select-error').hide();
+            $.ajax({
+                url:"?pid=62&action=question&test="+$("input[name=test_id]").val()+"&question_id="+$(this).attr('data-params')+"&offset="+$('#curr-que').val(),
+                dataType:"json",
+                type:"GET",
+                success:function(response) 
+                {
+                    if(!$.isEmptyObject(response))
+                    {
+                        $('input[type=radio]').attr('checked', false); 
+
+                        if($('#no_of_question').val()==index[index.length-1])
+                        {
+                            $('#next').attr('disabled',true);
+                        }
+                        else 
+                        {
+                            $('#next').attr('disabled',false);
+                        }
+                        
+                        if(index[index.length-1]==1)
+                        {
+                            $('#prev').attr('disabled',true);
+                        }
+                        else
+                        {
+                            $('#prev').attr('disabled',false);
+                        }
+
+                        $('.load-que').removeClass('text-success');
+                        $('#que_'+index[index.length-1]).addClass('text-success');
+
+                        $('#curr-que').val(index[index.length-1]);
+
+                        $('#question_id').val(response.data.question_id);
+                        $('#question').text(index[index.length-1]+' : '+response.data.question);
+
+                        $('#ans-op1').text('a. '+response.data.option1);
+                        $('#ans-op2').text('b. '+response.data.option2);
+                        $('#ans-op3').text('c. '+response.data.option3);
+                        $('#ans-op4').text('d. '+response.data.option4);
+
+                        if(response.data.answer.answer!=0)
+                        {
+                            for (var i=1; i<=4; i++) 
+                            {
+                                if(i==response.data.answer.answer)
+                                {
+                                    $('#option'+i).prop('checked',true);
+                                }
+                            }                                 
+                        }
+
+                        if(response.data.question_image!=null) 
+                        {
+                            $('#que-img').show();
+                            $('#question-image').attr("src",response.data.question_image);
+                        }
+                        else
+                        {
+                            $('#que-img').hide();   
+                        }
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown ) 
+                {
+                    console.log(errorThrown);
+                }
+            });
+        });
+        //Call when time up
+        function completeTest()
+        {
+            console.log('done');
+        }
+
+        $(document).on('click','.paginate',function(event){
+
+            $('#prev').attr('disabled',true);
+            $('#next').attr('disabled',false);
+
+            $.ajax({
+                url:"?pid=62&action=question&test="+$("input[name=test_id]").val()+"&page="+$(this).attr('id'),
+                dataType:"json",
+                type:"GET",
+                success:function(response) 
+                {   
+                    var question='';  
+                    $('#que-list').html('');           
+
+                    $('.paginate').removeClass('active');
+                    $(this).addClass('active');
+
+                    data = response.question;
+
+                    if(!$.isEmptyObject(data))
+                    {
+                        var k = Number(response.from);
+                        $('#question_id').val(data[1].question_id);
+                        $('#curr-que').val(1+k);
+                        
+                        $('#question').html(Number(k+1)+': '+$($($('<div />').html(data[0].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text());
+                        $('#ans-op1').text('a. '+data[0].option1);
+                        $('#ans-op2').text('b. '+data[0].option2);
+                        $('#ans-op3').text('c. '+data[0].option3);
+                        $('#ans-op4').text('d. '+data[0].option4);
+
+                        $('#prev').val(data[0].testid);
+                        $('#prev').attr('disabled',true);
+                        $('#next').val(data[0].testid);
+                        $('#save_next').val(data[0].testid);
+                        $('#no_of_question').val(data.length);
+                        
+                        if(data[0].question_image!=null) 
+                        {
+                            $('#que-img').show();
+                            $('#question-image').attr("src",data[0].question_image);
+                        }
+                        else
+                        {
+                            $('#que-img').hide();   
+                        }
+                        for(i=0;i<data.length;i++) 
+                        {
+                            if(i==0)
+                            {
+                                question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">'+(++k)+' : <a class="text-success load-que" id="que_'+k+'" data-params="'+data[i].question_id+'">'+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';   
+                            }
+                            else
+                            {
+                                question+='<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 "><a id="que_'+(++k)+'" class="load-que" data-params="'+data[i].question_id+'" >'+k+' : '+$($($('<div />').html(data[i].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text()+'</a></div>';
+                            }
+                        }
+                        
+                        $('#que-list').html(question);
+                        $('#que-list').hide().fadeIn(500);
+                        
+                       /* var paginate = '';
+                        for(k=1;k<=Math.ceil(Number(response.total_record)/5);k++) 
+                        {
+                            if(i==1)
+                            {
+                                paginate+='<li class="active paginate" id="page_'+k+'"><a>'+k+'</a></li>';
+                            }
+                            else
+                            {
+                                paginate+='<li><a class="paginate" id="page_'+k+'">'+k+'</a></li>';   
+                            }
+
+                        }
+                        $('.pagination').append(paginate);
+                        $('.pagination').show()*/
+                    }   
+                },
+                error: function(jqXHR, textStatus, errorThrown ) {
+                    console.log(errorThrown);
+                }
+            });
+        });
+    });
+</script>
+</body>
 </html>

@@ -30,12 +30,13 @@ if($_GET['action']=='questionList')
 
 	$class = mysql_fetch_assoc(mysql_query("SELECT  `class_id`,`test_id`,`subject_id` from `es_mcq_test` where `test_id`='".$_GET['test']."'"));
 
-	$subSql = mysql_query("SELECT `es_subjectid`, `es_classid`, `es_subjectname` FROM `es_subject` WHERE  `es_classid`='".$class['class_id']."' AND `es_subjectid` IN (".$class['subject_id'].")");
+	$subSql = mysql_query("SELECT `es_subjectid`, `es_classid`, `es_subjectname` FROM `es_subject` WHERE   `es_subjectid` IN (".$class['subject_id'].")");
 
 	while($subRow = mysql_fetch_assoc($subSql))
 	{
 		$subject[] = $subRow;	
 	}	
+	
 		
 	$questionSql = mysql_query("SELECT  `question_id`,`testid`,`question`,`option1`,`option2`,`option3`,`option4`,`answer`,`que_status`,`test_id`,`test_name` FROM `es_mcq_questions` INNER JOIN `es_mcq_test` as e ON  `testid`=`test_id`  WHERE `testid`='".$_GET['test']."' ORDER BY `question_id` DESC");
 

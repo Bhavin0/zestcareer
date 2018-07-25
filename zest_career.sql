@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 22, 2018 at 11:12 AM
+-- Generation Time: Jul 25, 2018 at 06:57 PM
 -- Server version: 5.5.60
 -- PHP Version: 5.6.36
 
@@ -2118,10 +2118,10 @@ CREATE TABLE `es_mcq_questions` (
   `subject_id` int(11) DEFAULT NULL COMMENT 'Reference from test table selected subjects',
   `question_image` varchar(255) DEFAULT NULL,
   `question` text,
-  `option1` varchar(30) DEFAULT NULL,
-  `option2` varchar(30) DEFAULT NULL,
-  `option3` varchar(30) DEFAULT NULL,
-  `option4` varchar(30) DEFAULT NULL,
+  `option1` text,
+  `option2` text,
+  `option3` text,
+  `option4` text,
   `answer` tinyint(4) DEFAULT NULL COMMENT 'Can be 1,2,3 or 4',
   `que_status` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -2132,10 +2132,12 @@ CREATE TABLE `es_mcq_questions` (
 
 INSERT INTO `es_mcq_questions` (`question_id`, `testid`, `subject_id`, `question_image`, `question`, `option1`, `option2`, `option3`, `option4`, `answer`, `que_status`) VALUES
 (7, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question ?</p>\r\n</body>\r\n</html>', 'option1', 'option2', 'option3', 'option4', 1, 1),
-(8, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question 2018</p>\r\n</body>\r\n</html>\r\n', 'aa', 'b', 'c', 'd', 1, 1),
+(8, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question 2018 ?</p>\r\n</body>\r\n</html>\r\n', 'aa', 'b', 'c', 'd', 1, 1),
 (9, 4, NULL, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is prime minister of India ?</p>\r\n</body>\r\n</html>', 'modi', 'nehru', 'vajpeyi', 'kalam', 1, 1),
 (10, 4, NULL, '982055_img.png', '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is lady in a history has 5 husbands ?</p>\r\n</body>\r\n</html>\r\n', 'Yashodaji', 'Rukmaniji', 'Draupadiji', 'Kuntiji', 2, 1),
-(13, 4, NULL, '755768_pic_market.jpg', '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is father of <b>bhishma ?</b></p>\r\n</body>\r\n</html>', 'shantanu', 'Dron', 'Raghu', 'Ram', 1, 1);
+(13, 4, NULL, '755768_pic_market.jpg', '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>Who is father of <b>bhishma ?</b></p>\r\n</body>\r\n</html>', 'shantanu', 'Dron', 'Raghu', 'Ram', 1, 1),
+(14, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question ?</p>\r\n</body>\r\n</html>', 'option1', 'option2', 'option3', 'option4', 1, 1),
+(15, 4, 3, NULL, '<html>\r\n<head>\r\n	<title></title>\r\n</head>\r\n<body>\r\n<p>This is yearly test question 2018 ?</p>\r\n</body>\r\n</html>\r\n', 'aa', 'b', 'c', 'd', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2148,6 +2150,7 @@ CREATE TABLE `es_mcq_result` (
   `test_id` int(11) DEFAULT NULL COMMENT 'Reference of test table',
   `student_id` int(11) DEFAULT NULL COMMENT 'Reference student table or admission table',
   `que_id` int(11) DEFAULT NULL COMMENT 'Reference of question table',
+  `subject_id` int(11) DEFAULT NULL COMMENT 'Reference of subject table',
   `answer` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -2155,10 +2158,8 @@ CREATE TABLE `es_mcq_result` (
 -- Dumping data for table `es_mcq_result`
 --
 
-INSERT INTO `es_mcq_result` (`result_id`, `test_id`, `student_id`, `que_id`, `answer`) VALUES
-(1, 3, 68, 1, 0),
-(2, 3, 68, 7, 0),
-(3, 3, 68, 9, 0);
+INSERT INTO `es_mcq_result` (`result_id`, `test_id`, `student_id`, `que_id`, `subject_id`, `answer`) VALUES
+(1, 4, 68, 8, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -2195,7 +2196,7 @@ INSERT INTO `es_mcq_test` (`test_id`, `class_id`, `subject_id`, `test_name`, `no
 (1, 1, '3', 'monthly', 10, 25, 2, '2018-06-29 18:30:00', '2018-06-29 18:30:00', 10, '05:30:00', '05:30:00', NULL, NULL, 1, '0000-00-00 00:00:00', '2018-07-21 04:31:08', NULL),
 (2, 1, '3', 'yearly', 10, 25, 4, '2018-06-29 18:30:00', '2018-06-29 18:30:00', 10, '05:30:00', '05:30:00', NULL, NULL, 1, '0000-00-00 00:00:00', '2018-07-20 01:06:20', '2018-07-21 03:11:27'),
 (3, 2, '6', 'Prely test', 10, 25, 4, '2018-07-12 18:30:00', '2018-07-18 18:30:00', 30, '05:30:00', '05:30:00', NULL, NULL, 1, '2018-07-01 07:24:09', '2018-07-14 06:33:04', NULL),
-(4, 6, '1,3,2', 'Quarterly', 10, 0, 4, '2018-07-21 18:30:00', '2018-07-26 18:30:00', 30, '05:30:00', '05:30:00', NULL, NULL, 1, '2018-07-12 07:07:16', '2018-07-20 01:07:23', NULL);
+(4, 6, '1,3,2', 'Quarterly', 10, 0, 4, '2018-07-25 18:30:00', '2018-07-26 18:30:00', 1, '05:30:00', '05:30:00', NULL, NULL, 1, '2018-07-12 07:07:16', '2018-07-20 01:07:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -7901,13 +7902,13 @@ ALTER TABLE `es_marks`
 -- AUTO_INCREMENT for table `es_mcq_questions`
 --
 ALTER TABLE `es_mcq_questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `es_mcq_result`
 --
 ALTER TABLE `es_mcq_result`
-  MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `es_mcq_test`

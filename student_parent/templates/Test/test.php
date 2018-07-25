@@ -117,6 +117,7 @@
                                             <input type="hidden" name="no_of_question"  
                                             id="no_of_question" />
                                             <input type="hidden" name="question_id" id="question_id" />
+                                            <input type="hidden" name="question_id" id="subject_id" />
                                             <input type="hidden" name="curr-que" id="curr-que"  />
                                             <span id="question">
                                             
@@ -276,6 +277,7 @@
 
                             $('#ans-form').show();
                             $('#question_id').val(data[0].question_id);
+                            $('#subject_id').val(data[0].subject_id);
 
                             $('#question').html('1 : '+$($($('<div />').html(data[0].question)).text().replace(/^[\S\s]*<body[^>]*?>/i,"").replace(/<\/body[\S\s]*$/i,"")).text());                                
                             $('#curr-que').val('1');
@@ -342,7 +344,10 @@
             $('.select-error').hide();
         });
        
-        $('#save_next').on('click',function(){
+        $('#save_next').on('click',function()
+        {
+            var que = Number($('#curr-que').val());
+
             if($('input[type=radio]:checked').attr('id')==undefined)
             {
                 $('.select-error').addClass('text-danger');
@@ -352,7 +357,7 @@
             else
             {
                 $.ajax({
-                    url:"?pid=62&action=question&test="+$(this).val()+"&seq=next&question_id="+$('#question_id').val()+"&ans="+$('input[type=radio]:checked').val()+"&offset="+$('#curr-que').val(),
+                    url:"?pid=62&action=question&test="+$(this).val()+"&seq=next&subject_id="+$('#subject_id').val()+"&question_id="+$("#que_"+(que+1)).attr('data-params')+"&ans="+$('input[type=radio]:checked').val()+"&offset="+que,
                     dataType:"json",
                     type:"GET",
                     success:function(response) 
@@ -368,13 +373,21 @@
                             if(!$.isEmptyObject(response))
                             {
                                 $('input[type=radio]').attr('checked', false); 
+                                
                                 $('#curr-que').val(response.next_question);
+                                
                                 $('#question_id').val(response.data.question_id);
-                                $('#question').text(response.next_question+' : '+response.data.question);
-                                $("#que_"+(response.next_question-1)).removeClass('text-success');
-                                $("#que_"+(response.next_question-1)).addClass('text-muted');
 
-                                $("#que_"+(response.next_question)).addClass('text-success');
+                                $('#subject_id').val(response.data.subject_id);
+
+                                $('#question').text((que+1)+' : '+response.data.question);
+                                
+                                $("#que_"+(que)).removeClass('text-success');
+
+                                $("#que_"+(que)).addClass('text-muted');
+
+                                $("#que_"+(que+1)).addClass('text-success');
+
                                 if(response.question_image!=null) 
                                 {
                                     $('#que-img').show();
@@ -408,7 +421,7 @@
             var offset = Number($('#curr-que').val())-1;
             
             $.ajax({
-                url:"?pid=62&action=question&test="+$(this).val()+"&seq=prev&question_id="+$('#que_'+(offset+1)).data().params+"&offset="+offset,
+                url:"?pid=62&action=question&test="+$(this).val()+"&seq=prev&question_id="+$('#que_'+offset).attr('data-params')+"&offset="+offset,
                 dataType:"json",
                 type:"GET",
                 success:function(response) 
@@ -432,7 +445,7 @@
 
                         
                         $('#question_id').val(response.data.question_id);
-                        
+                        $('#subject_id').val(response.data.subject_id);
                         $('#question').text((response.next_question+1)+' : '+response.data.question);
                         
                         $('#ans-op1').text('a. '+response.data.option1);
@@ -491,6 +504,7 @@
                        
                         $('#curr-que').val(response.next_question);
                         $('#question_id').val(response.data.question_id);
+                        $('#subject_id').val(response.data.subject_id);
                         $('#question').text(response.next_question+' : '+response.data.question);
 
                         $("#que_"+(response.next_question-1)).removeClass('text-success');
@@ -569,6 +583,7 @@
                         $('#curr-que').val(index[index.length-1]);
 
                         $('#question_id').val(response.data.question_id);
+                        $('#subject_id').val(response.data.subject_id);
                         $('#question').text(index[index.length-1]+' : '+response.data.question);
 
                         $('#ans-op1').text('a. '+response.data.option1);

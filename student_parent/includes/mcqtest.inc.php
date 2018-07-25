@@ -33,7 +33,13 @@
 	if($_GET['action']=='question' && isset($_GET['test']) && isset($_GET['question_id']))
 	{
 		$question = [];
+		$ans=0;
 		
+		if(isset($_GET['ans']))
+        {
+        	$ans = $_GET['ans'];
+        }
+
 		$questionSource = mysql_query("SELECT `question_id`,`question_image`,`testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions`  WHERE `que_status`='1' AND testid='".$_GET['test']."' AND `question_id` = '".$_GET['question_id']."' LIMIT 0,1");
 
 		if(mysql_num_rows($questionSource))
@@ -48,7 +54,16 @@
 	        $question['data']['question'] = preg_replace("~[^a-z0-9:]~i"," ", str_replace(PHP_EOL,'',strip_tags($question['data']['question']))); 
 
 			$answer = mysql_fetch_assoc(mysql_query("SELECT `test_id`, `student_id`, `que_id`, `answer` FROM `es_mcq_result` WHERE `que_id`='".$_GET['question_id']."' and `test_id`='".$_GET['test']."' and `student_id`='".$_SESSION['eschools']['user_id']."'"));
-			
+			//echo "<pre>";print_r($answer);die;
+			if(!empty($answer) &&  $ans!=0)
+	        {
+	        	mysql_query("UPDATE `es_mcq_result` SET `subject_id`='".$_GET['subject_id']."',`answer`='".$ans."' WHERE `que_id`='".$_GET['question_id']."'");
+	        }
+	        else
+	        {
+	        	mysql_query("INSERT INTO `es_mcq_result`(`test_id`,`subject_id`, `student_id`, `que_id`, `answer`) VALUES ('".$question['data']['testid']."','".$_GET['subject_id']."','".$_SESSION['eschools']['user_id']."','".$_GET['question_id']."','".$ans."')");
+	        }
+
 	        if($_GET['seq']=='prev')
 			{
 				$offset = $_GET['offset']-1;
@@ -71,7 +86,6 @@
 
 	if($_GET['action']=='question' &&  isset($_GET['test']) && isset($_GET['offset']))
 	{
-		
 		//Find question from based on test
 		$question = [];
 		$questionSource ='';
@@ -86,9 +100,7 @@
 		{
 			$offset = $_GET['offset'];
 		}
-		
 		$questionSource = mysql_query("SELECT `question_id`,`question_image`,`testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions`  WHERE `que_status`='1' AND testid='".$_GET['test']."' LIMIT ".$offset.",1");	
-		
 		
 		if(isset($_GET['ans']))
         {
@@ -103,18 +115,18 @@
 			{
 				$question['data']['question_image'] = 'http://'.$_SERVER['HTTP_HOST'].'/office_admin/images/question_image/'.$question['data']['question_image'];
 			}
+	        
 	        $question['data']['question'] = preg_replace("~[^a-z0-9:]~i"," ", str_replace(PHP_EOL,'',strip_tags($question['data']['question']))); 
 
-	        
 			$answer = mysql_fetch_assoc(mysql_query("SELECT `test_id`, `student_id`, `que_id`, `answer` FROM `es_mcq_result` WHERE `que_id`='".$_GET['question_id']."' and `test_id`='".$_GET['test']."' and `student_id`='".$_SESSION['eschools']['user_id']."'"));
-			
+						
 			if(!empty($answer))
 	        {
-	        	mysql_query("UPDATE `es_mcq_result` SET `answer`='".$ans."' WHERE `que_id`='".$_GET['question_id']."'");
+	        	mysql_query("UPDATE `es_mcq_result` SET `subject_id`='".$_GET['subject_id']."',`answer`='".$ans."' WHERE `que_id`='".$_GET['question_id']."'");
 	        }
 	        else if($ans!=0)
 	        {
-				mysql_query("INSERT INTO `es_mcq_result`(`test_id`, `student_id`, `que_id`, `answer`) VALUES ('".$question['data']['testid']."','".$_SESSION['eschools']['user_id']."','".$_GET['question_id']."','".$ans."')");
+				mysql_query("INSERT INTO `es_mcq_result`(`test_id`,`subject_id`, `student_id`, `que_id`, `answer`) VALUES ('".$question['data']['testid']."','".$_GET['subject_id']."','".$_SESSION['eschools']['user_id']."','".$_GET['question_id']."','".$ans."')");
 	        }
 
 	        if($_GET['seq']=='prev')
@@ -146,7 +158,8 @@
 
 		$_GET['page'] = ($_GET['page'] - 1)*5;
 
-		$questionSource = mysql_query("SELECT `question_id`,`question_image`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions` WHERE `que_status`='1' AND testid='".$_GET['test']."' LIMIT ".$_GET['page'].",5");
+		$questionSource = mysql_query("SELECT `question_id`,`subject_id`,`question_image`, `testid`, `question`, `option1`, `option2`, `option3`, `option4`, `que_status` FROM `es_mcq_questions` WHERE `que_status`='1' AND testid='".$_GET['test']."' LIMIT ".$_GET['page'].",5");
+		
 		$total_record = mysql_fetch_assoc(mysql_query("SELECT count(question_id) AS count FROM `es_mcq_questions` WHERE `que_status`='1' AND testid='".$_GET['test']."'"));
 		//Find question from based on test
 		if(mysql_num_rows($questionSource))
@@ -169,6 +182,5 @@
 		echo json_encode($response);
 		exit;
 	}
-
 ?>
 
